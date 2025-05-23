@@ -113,10 +113,14 @@ export class TeacherService {
     teacher.password = await bcrypt.hash(password, 7);
     await this.teacherRepo.save(teacher);
 
-    return { message: "Password successfully changed", new_pass: password };
+    return {
+      message: "Password successfully changed",
+      success: true,
+      new_pass: password,
+    };
   }
 
   async updateTokenHash(id: number, hash: string) {
-    await this.teacherRepo.update(id, { refersh_token_hash: hash }); 
+    await this.teacherRepo.update(id, { refersh_token_hash: hash });
   }
 }

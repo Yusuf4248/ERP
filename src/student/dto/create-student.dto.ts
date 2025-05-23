@@ -1,3 +1,4 @@
+import { Field, InputType } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import {
   IsString,
@@ -9,6 +10,7 @@ import {
   MaxLength,
 } from "class-validator";
 
+@InputType()
 export class CreateStudentDto {
   @ApiProperty({
     example: `Ali`,
@@ -17,6 +19,7 @@ export class CreateStudentDto {
   @IsString({ message: `Ism satr (string) bo'lishi kerak` })
   @MinLength(2, { message: `Ism kamida 2 ta belgidan iborat bo'lishi kerak` })
   @MaxLength(50, { message: `Ism 50 belgidan oshmasligi kerak` })
+  @Field()
   first_name: string;
 
   @ApiProperty({
@@ -28,6 +31,7 @@ export class CreateStudentDto {
     message: `Familiya kamida 2 ta belgidan iborat bo'lishi kerak`,
   })
   @MaxLength(50, { message: `Familiya 50 belgidan oshmasligi kerak` })
+  @Field()
   last_name: string;
 
   @ApiProperty({
@@ -35,6 +39,7 @@ export class CreateStudentDto {
     description: `O'quvchining email manzili`,
   })
   @IsEmail({}, { message: `Email manzili noto'g'ri formatda` })
+  @Field()
   email: string;
 
   @ApiProperty({
@@ -42,6 +47,7 @@ export class CreateStudentDto {
     description: `Telefon raqami (xalqaro formatda)`,
   })
   @IsPhoneNumber(`UZ`, { message: `Telefon raqami noto'g'ri` })
+  @Field()
   phone: string;
 
   @ApiProperty({
@@ -50,10 +56,12 @@ export class CreateStudentDto {
   })
   @IsString({ message: `Parol satr bo'lishi kerak` })
   @MinLength(8, { message: `Parol kamida 8 ta belgidan iborat bo'lishi kerak` })
+  @Field()
   password_hash: string;
 
   @IsString({ message: `Parol satr bo'lishi kerak` })
   @MinLength(8, { message: `Parol kamida 8 ta belgidan iborat bo'lishi kerak` })
+  @Field()
   confirm_password: string;
 
   @ApiProperty({
@@ -63,6 +71,7 @@ export class CreateStudentDto {
   @IsEnum([`male`, `female`], {
     message: `Jins faqat "male" yoki "female" bo'lishi kerak`,
   })
+  @Field()
   gender: `male` | `female`;
 
   @ApiProperty({
@@ -73,5 +82,6 @@ export class CreateStudentDto {
     {},
     { message: `Tug'ilgan sana to'g'ri formatda bo'lishi kerak (YYYY-MM-DD)` }
   )
+  @Field()
   date_of_birth: Date;
 }
