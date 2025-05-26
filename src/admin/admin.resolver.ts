@@ -5,7 +5,7 @@ import { ChangePasswordDto } from "../student/dto/change-password.dto";
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { Admin } from "typeorm";
 
-@Resolver("admin")
+@Resolver(() => Admin)
 export class AdminResolver {
   constructor(private readonly adminService: AdminService) {}
 

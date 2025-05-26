@@ -5,8 +5,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
+import { Group } from "../../group/entities/group.entity";
 
 @ObjectType()
 @Entity("course")
@@ -81,4 +83,11 @@ export class Course {
   @Field()
   @UpdateDateColumn()
   updated_at: Date;
+
+  @ApiProperty({
+    type: () => [Group],
+  })
+  @Field(() => [Group], { nullable: true })
+  @OneToMany(() => Group, (group) => group.course)
+  groups: Group[];
 }

@@ -4,9 +4,11 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { TeacherGroup } from "../../teacher-groups/entities/teacher-group.entity";
 
 @ObjectType()
 @Entity("teacher")
@@ -65,4 +67,8 @@ export class Teacher {
   @Field()
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToMany(() => TeacherGroup, (tg) => tg.teacher)
+  @Field(() => [TeacherGroup])
+  teacherGroups: TeacherGroup[];
 }

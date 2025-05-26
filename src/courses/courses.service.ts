@@ -24,7 +24,7 @@ export class CoursesService {
   }
 
   async findAll() {
-    const courses = await this.courseRepo.find();
+    const courses = await this.courseRepo.find({ relations: ["groups"] });
     if (courses.length == 0) {
       throw new NotFoundException("Course not found");
     }
@@ -39,7 +39,10 @@ export class CoursesService {
     if (!Number.isInteger(id) || Number(id) <= 0) {
       throw new BadRequestException("ID must be integer and greater than zero");
     }
-    const course = await this.courseRepo.findOneBy({ id });
+    const course = await this.courseRepo.findOne({
+      where: { id },
+      relations: ["groups"],
+    });
     if (!course) {
       throw new NotFoundException(`${id}-course not found`);
     }

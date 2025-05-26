@@ -1,6 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Attendance } from "../../attendance/entities/attendance.entity";
+import { StudentGroup } from "../../student-groups/entities/student-group.entity";
 
 @ObjectType()
 @Entity("student")
@@ -91,4 +93,10 @@ export class Student {
   @Column({ type: "varchar", nullable: true })
   @Field()
   refersh_token_hash: string;
+
+  @OneToMany(() => Attendance, (attendance) => attendance.student)
+  attendance: Attendance[];
+
+  @OneToMany(() => StudentGroup, (studentgroup) => studentgroup.student)
+  studentgroup: StudentGroup[];
 }
