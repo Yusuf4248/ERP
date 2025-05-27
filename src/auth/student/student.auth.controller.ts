@@ -8,7 +8,7 @@ export class StudentAuthController {
   constructor(private readonly studentAuthService: StudentAuthService) {}
 
   @Post("logIn")
-  async signIn(
+  async logIn(
     @Body() logInDto: LoginDto,
     @Res({ passthrough: true }) res: Response
   ) {
@@ -16,7 +16,7 @@ export class StudentAuthController {
   }
 
   @Get("logOut")
-  signout(
+  logOut(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response
   ) {

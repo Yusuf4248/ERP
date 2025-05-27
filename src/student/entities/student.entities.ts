@@ -3,6 +3,8 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Attendance } from "../../attendance/entities/attendance.entity";
 import { StudentGroup } from "../../student-groups/entities/student-group.entity";
+import { HomeworkSubmission } from "../../homework-submission/entities/homework-submission.entity";
+import { Grade } from "../../grades/entities/grade.entity";
 
 @ObjectType()
 @Entity("student")
@@ -99,4 +101,13 @@ export class Student {
 
   @OneToMany(() => StudentGroup, (studentgroup) => studentgroup.student)
   studentgroup: StudentGroup[];
+
+  @OneToMany(
+    () => HomeworkSubmission,
+    (homework_submission) => homework_submission.student
+  )
+  homework_submission: HomeworkSubmission[];
+
+  @OneToMany(() => Grade, (grades) => grades.student)
+  grades: Grade[];
 }

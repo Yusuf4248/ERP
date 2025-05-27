@@ -1,6 +1,7 @@
 import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import {
   Column,
+  Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -10,7 +11,7 @@ import { Group } from "../../group/entities/group.entity";
 import { Attendance } from "../../attendance/entities/attendance.entity";
 
 @ObjectType()
-@InputType()
+@Entity()
 export class Schedule {
   @Field(() => ID)
   @PrimaryGeneratedColumn()

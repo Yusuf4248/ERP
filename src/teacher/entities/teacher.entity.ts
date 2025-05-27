@@ -9,6 +9,8 @@ import {
 import { ApiProperty } from "@nestjs/swagger";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { TeacherGroup } from "../../teacher-groups/entities/teacher-group.entity";
+import { Homework } from "../../homeworks/entities/homework.entity";
+import { Grade } from "../../grades/entities/grade.entity";
 
 @ObjectType()
 @Entity("teacher")
@@ -71,4 +73,10 @@ export class Teacher {
   @OneToMany(() => TeacherGroup, (tg) => tg.teacher)
   @Field(() => [TeacherGroup])
   teacherGroups: TeacherGroup[];
+
+  @OneToMany(() => Homework, (homework) => homework.teacher)
+  homework: Homework[];
+
+  @OneToMany(() => Grade, (grades) => grades.teacher)
+  grades: Grade[];
 }
