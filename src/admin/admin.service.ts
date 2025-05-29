@@ -10,19 +10,23 @@ import { Admin } from "./entities/admin.entity";
 import { Repository } from "typeorm";
 import * as bcrypt from "bcrypt";
 import { ChangePasswordDto } from "../student/dto/change-password.dto";
+import { BranchesService } from "../branches/branches.service";
 
 @Injectable()
 export class AdminService {
   constructor(
-    @InjectRepository(Admin) private readonly adminRepo: Repository<Admin>
+    @InjectRepository(Admin) private readonly adminRepo: Repository<Admin>,
+    private readonly branchService: BranchesService
   ) {}
   async create(createAdminDto: CreateAdminDto) {
     const hashshed_password = await bcrypt.hash(
       createAdminDto.password_hash,
       7
     );
+    const branch = await this.branchService.findOne(createAdminDto.branchId);
     const newAdmin = await this.adminRepo.save({
       ...createAdminDto,
+      branch: branch.branch,
       password_hash: hashshed_password,
     });
     return {
@@ -33,7 +37,7 @@ export class AdminService {
   }
 
   async findAll() {
-    const admins = await this.adminRepo.find();
+    const admins = await this.adminRepo.find({ relations: ["branch"] });
     if (admins.length == 0) {
       throw new BadRequestException("Admins not found");
     }

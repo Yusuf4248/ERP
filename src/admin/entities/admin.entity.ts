@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Branch } from "../../branches/entities/branch.entity";
 
 @ObjectType()
 @Entity("admin")
@@ -63,4 +64,7 @@ export class Admin {
   @Field()
   @Column({ type: "varchar", nullable: true })
   refersh_token_hash: string;
+
+  @ManyToOne(() => Branch, (branch) => branch.admin)
+  branch: Branch;
 }

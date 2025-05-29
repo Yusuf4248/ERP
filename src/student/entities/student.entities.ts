@@ -1,10 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  OneToOne,
+} from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Attendance } from "../../attendance/entities/attendance.entity";
 import { StudentGroup } from "../../student-groups/entities/student-group.entity";
 import { HomeworkSubmission } from "../../homework-submission/entities/homework-submission.entity";
 import { Grade } from "../../grades/entities/grade.entity";
+import { Lid } from "../../lid/entities/lid.entity";
 
 @ObjectType()
 @Entity("student")
@@ -110,4 +117,7 @@ export class Student {
 
   @OneToMany(() => Grade, (grades) => grades.student)
   grades: Grade[];
+
+  @OneToOne(() => Lid, (lid) => lid.student)
+  lid: Lid;
 }

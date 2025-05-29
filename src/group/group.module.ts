@@ -9,6 +9,7 @@ import { Schedule } from "../schedules/entities/schedule.entity";
 import { StudentGroup } from "../student-groups/entities/student-group.entity";
 import { TeacherGroup } from "../teacher-groups/entities/teacher-group.entity";
 import { Homework } from "../homeworks/entities/homework.entity";
+import { Lid } from "../lid/entities/lid.entity";
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { Homework } from "../homeworks/entities/homework.entity";
       StudentGroup,
       TeacherGroup,
       Homework,
+      Lid,
     ]),
     CoursesModule,
   ],

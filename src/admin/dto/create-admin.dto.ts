@@ -1,4 +1,4 @@
-import { Field, InputType } from "@nestjs/graphql";
+import { Field, InputType, Int } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import {
   IsString,
@@ -6,6 +6,8 @@ import {
   IsNotEmpty,
   IsPhoneNumber,
   IsStrongPassword,
+  IsInt,
+  IsPositive,
 } from "class-validator";
 
 @InputType()
@@ -50,4 +52,13 @@ export class CreateAdminDto {
   @IsStrongPassword()
   @Field()
   password_hash: string;
+
+  @ApiProperty({
+    example: 1,
+    description: "Filial ID (branchId)",
+  })
+  @Field(() => Int)
+  @IsInt({ message: "branchId butun son bo'lishi kerak" })
+  @IsPositive({ message: "branchId musbat bo'lishi kerak" })
+  branchId: number;
 }

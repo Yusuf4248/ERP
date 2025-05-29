@@ -16,6 +16,10 @@ import { StudentGroupsModule } from "./student-groups/student-groups.module";
 import { HomeworksModule } from './homeworks/homeworks.module';
 import { HomeworkSubmissionModule } from './homework-submission/homework-submission.module';
 import { GradesModule } from './grades/grades.module';
+import { LidModule } from './lid/lid.module';
+import { BranchesModule } from './branches/branches.module';
+import { RoomsModule } from './rooms/rooms.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -50,6 +54,10 @@ import { GradesModule } from './grades/grades.module';
     HomeworksModule,
     HomeworkSubmissionModule,
     GradesModule,
+    LidModule,
+    BranchesModule,
+    RoomsModule,
+    EventsModule,
   ],
   controllers: [],
   providers: [],

@@ -10,15 +10,17 @@ import * as bcrypt from "bcrypt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ChangePasswordDto } from "./dto/change-password.dto";
+import { LidService } from "../lid/lid.service";
 
 @Injectable()
 export class StudentService {
   constructor(
     @InjectRepository(Student)
-    private readonly studentRepo: Repository<Student>
+    private readonly studentRepo: Repository<Student>,
+    private readonly lidService: LidService
   ) {}
   async create(createStudentDto: CreateStudentDto) {
-    const { password_hash, confirm_password } = createStudentDto;
+    const { password_hash, confirm_password, lidId } = createStudentDto;
     if (password_hash !== confirm_password) {
       throw new BadRequestException(
         "Password and confirmation password are not the same"
@@ -26,9 +28,14 @@ export class StudentService {
     }
     const hashshed_password = await bcrypt.hash(password_hash, 7);
 
+    const lid = await this.lidService.findOne(+lidId);
+
+    console.log(lid);
+
     const newStudent = await this.studentRepo.save({
       ...createStudentDto,
       password_hash: hashshed_password,
+      lidId: lid.lid.id,
     });
 
     return {

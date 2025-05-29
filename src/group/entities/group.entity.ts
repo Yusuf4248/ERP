@@ -15,6 +15,7 @@ import { TeacherGroup } from "../../teacher-groups/entities/teacher-group.entity
 import { Schedule } from "../../schedules/entities/schedule.entity";
 import { StudentGroup } from "../../student-groups/entities/student-group.entity";
 import { Homework } from "../../homeworks/entities/homework.entity";
+import { Lid } from "../../lid/entities/lid.entity";
 
 export enum GroupStatus {
   NEW = "new",
@@ -98,4 +99,7 @@ export class Group {
 
   @OneToMany(() => Homework, (homework) => homework.group)
   homework: Homework[];
+
+  @OneToMany(() => Lid, (lid) => lid.group)
+  lid: Lid[];
 }

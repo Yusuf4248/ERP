@@ -1,0 +1,95 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from "@nestjs/common";
+import { EventsService } from "./events.service";
+import { CreateEventDto } from "./dto/create-event.dto";
+import { UpdateEventDto } from "./dto/update-event.dto";
+import { Event } from "./entities/event.entity";
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiParam,
+} from "@nestjs/swagger";
+import { FilterEventDto } from "./dto/filter-event.dto";
+
+@ApiTags("Events")
+@Controller("events")
+export class EventsController {
+  constructor(private readonly eventsService: EventsService) {}
+
+  @Post()
+  @ApiOperation({ summary: "Yangi tadbir yaratish" })
+  @ApiBody({ type: CreateEventDto })
+  @ApiResponse({ status: 201, description: "Tadbir yaratildi", type: Event })
+  create(@Body() createEventDto: CreateEventDto) {
+    return this.eventsService.create(createEventDto);
+  }
+
+  @Get()
+  @ApiOperation({ summary: "Barcha tadbirlarni olish" })
+  @ApiResponse({
+    status: 200,
+    description: "Tadbirlar ro'yxati",
+    type: [Event],
+  })
+  findAll() {
+    return this.eventsService.findAll();
+  }
+
+  @Get(":id")
+  @ApiOperation({ summary: "ID bo'yicha tadbirni olish" })
+  @ApiParam({ name: "id", description: "Tadbirning ID raqami", example: 1 })
+  @ApiResponse({ status: 200, description: "Topilgan tadbir", type: Event })
+  findOne(@Param("id") id: string) {
+    return this.eventsService.findOne(+id);
+  }
+
+  @Patch(":id")
+  @ApiOperation({ summary: "Tadbirni yangilash" })
+  @ApiParam({ name: "id", description: "Tadbirning ID raqami", example: 1 })
+  @ApiBody({ type: UpdateEventDto })
+  @ApiResponse({ status: 200, description: "Yangilangan tadbir", type: Event })
+  update(@Param("id") id: string, @Body() updateEventDto: UpdateEventDto) {
+    return this.eventsService.update(+id, updateEventDto);
+  }
+
+  @Delete(":id")
+  @ApiOperation({ summary: "Tadbirni o'chirish" })
+  @ApiParam({ name: "id", description: "Tadbirning ID raqami", example: 1 })
+  @ApiResponse({ status: 200, description: "Tadbir o'chirildi" })
+  remove(@Param("id") id: string) {
+    return this.eventsService.remove(+id);
+  }
+
+  @Post("filter-by-date")
+  @ApiOperation({ summary: "Vaqt oralig'i bo'yicha filter" })
+  @ApiBody({ type: FilterEventDto })
+  @ApiResponse({
+    status: 200,
+    description: "Oraliqqa mos keladigan tadbirlar",
+    type: [Event],
+  })
+  filterByDate(@Body() dto: FilterEventDto) {
+    return this.eventsService.findByDateRange(dto);
+  }
+
+  @Post("filter-by-status")
+  @ApiOperation({ summary: "Status bo'yicha filter" })
+  @ApiBody({ type: FilterEventDto })
+  @ApiResponse({
+    status: 200,
+    description: "Berilgan statusga mos tadbirlar",
+    type: [Event],
+  })
+  filterByStatus(@Body() dto: FilterEventDto) {
+    return this.eventsService.findByStatus(dto);
+  }
+}

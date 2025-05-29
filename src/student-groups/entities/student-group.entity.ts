@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-
 import { Group } from "../../group/entities/group.entity";
 import { Student } from "../../student/entities/student.entities";
 

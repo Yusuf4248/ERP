@@ -9,6 +9,8 @@ import { StudentGroup } from "../student-groups/entities/student-group.entity";
 import { TeacherGroup } from "../teacher-groups/entities/teacher-group.entity";
 import { HomeworkSubmission } from "../homework-submission/entities/homework-submission.entity";
 import { Grade } from "../grades/entities/grade.entity";
+import { Lid } from "../lid/entities/lid.entity";
+import { LidModule } from "../lid/lid.module";
 
 @Module({
   imports: [
@@ -19,7 +21,9 @@ import { Grade } from "../grades/entities/grade.entity";
       TeacherGroup,
       HomeworkSubmission,
       Grade,
+      Lid,
     ]),
+    LidModule,
   ],
   controllers: [StudentController],
   providers: [StudentResolver, StudentService],

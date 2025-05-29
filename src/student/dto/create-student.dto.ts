@@ -8,6 +8,7 @@ import {
   IsEnum,
   MinLength,
   MaxLength,
+  IsInt,
 } from "class-validator";
 
 @InputType()
@@ -84,4 +85,8 @@ export class CreateStudentDto {
   )
   @Field()
   date_of_birth: Date;
+
+  @ApiProperty({ example: 1, description: "Tegishli Lid ID si" })
+  @IsInt()
+  lidId: number;
 }
