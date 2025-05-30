@@ -1,9 +1,9 @@
 import { Field, InputType } from "@nestjs/graphql";
 import {
   IsDateString,
-  IsIn,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
 } from "class-validator";
 
@@ -12,20 +12,24 @@ export class UpdateAttendanceDto {
   @Field()
   @IsNotEmpty()
   @IsInt()
-  studentId: number;
+  @IsOptional()
+  studentId?: number;
 
   @Field()
   @IsNotEmpty()
   @IsInt()
-  scheduleId: number;
+  @IsOptional()
+  scheduleId?: number;
 
   @Field()
   @IsNotEmpty()
   @IsDateString()
-  date: Date;
+  @IsOptional()
+  date?: Date;
 
   @Field()
   @IsNotEmpty()
   @IsString()
-  status: string;
+  @IsOptional()
+  status?: string;
 }

@@ -20,6 +20,9 @@ import { LidModule } from './lid/lid.module';
 import { BranchesModule } from './branches/branches.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { EventsModule } from './events/events.module';
+import { EventParticipantModule } from './event-participant/event-participant.module';
+import { PaymentsModule } from './payments/payments.module';
+import { PaymentTypesModule } from './payment-types/payment-types.module';
 
 @Module({
   imports: [
@@ -58,6 +61,9 @@ import { EventsModule } from './events/events.module';
     BranchesModule,
     RoomsModule,
     EventsModule,
+    EventParticipantModule,
+    PaymentsModule,
+    PaymentTypesModule,
   ],
   controllers: [],
   providers: [],

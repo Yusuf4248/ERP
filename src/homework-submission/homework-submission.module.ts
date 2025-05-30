@@ -8,6 +8,7 @@ import { Homework } from "../homeworks/entities/homework.entity";
 import { StudentModule } from "../student/student.module";
 import { HomeworksModule } from "../homeworks/homeworks.module";
 import { Grade } from "../grades/entities/grade.entity";
+import { HomeworkSubmissionResolver } from "./homework-submission.resolver";
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { Grade } from "../grades/entities/grade.entity";
     HomeworksModule,
   ],
   controllers: [HomeworkSubmissionController],
-  providers: [HomeworkSubmissionService],
+  providers: [HomeworkSubmissionService, HomeworkSubmissionResolver],
   exports: [HomeworkSubmissionService],
 })
 export class HomeworkSubmissionModule {}

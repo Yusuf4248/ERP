@@ -1,7 +1,14 @@
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Branch } from "../../branches/entities/branch.entity";
 import { ApiProperty } from "@nestjs/swagger";
+import { Schedule } from "../../schedules/entities/schedule.entity";
 
 @ObjectType()
 @Entity("rooms")
@@ -37,4 +44,8 @@ export class Room {
   @ManyToOne(() => Branch, (branch) => branch.room)
   @Field(() => Branch)
   branch: Branch;
+
+  @Field(() => [Schedule])
+  @OneToMany(() => Schedule, (schedules) => schedules.room)
+  schedules: Schedule[];
 }

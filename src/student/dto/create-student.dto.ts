@@ -9,7 +9,9 @@ import {
   MinLength,
   MaxLength,
   IsInt,
+  IsOptional,
 } from "class-validator";
+import { Lid } from "../../lid/entities/lid.entity";
 
 @InputType()
 export class CreateStudentDto {
@@ -88,5 +90,7 @@ export class CreateStudentDto {
 
   @ApiProperty({ example: 1, description: "Tegishli Lid ID si" })
   @IsInt()
-  lidId: number;
+  @IsOptional()
+  @Field(() => Lid, { nullable: true })
+  lidId?: number;
 }

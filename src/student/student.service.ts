@@ -27,17 +27,12 @@ export class StudentService {
       );
     }
     const hashshed_password = await bcrypt.hash(password_hash, 7);
-
-    const lid = await this.lidService.findOne(+lidId);
-
-    console.log(lid);
-
+    const { lid } = await this.lidService.findOne(+lidId!);
     const newStudent = await this.studentRepo.save({
       ...createStudentDto,
       password_hash: hashshed_password,
-      lidId: lid.lid.id,
+      lid,
     });
-
     return {
       message: "Student successfully created!",
       success: true,
@@ -46,7 +41,7 @@ export class StudentService {
   }
 
   async findAll() {
-    const students = await this.studentRepo.find();
+    const students = await this.studentRepo.find({ relations: ["lid"] });
     if (students.length == 0)
       throw new BadRequestException("Students not found");
     return {
@@ -60,7 +55,10 @@ export class StudentService {
       throw new BadRequestException(
         "ID must be integer and must be greater than zero"
       );
-    const student = await this.studentRepo.findOneBy({ id });
+    const student = await this.studentRepo.findOne({
+      where: { id },
+      relations: ["lid"],
+    });
     if (!student) {
       throw new BadRequestException(`student with ${id}-id not fount`);
     }
@@ -79,6 +77,11 @@ export class StudentService {
     await this.findOne(id);
     await this.studentRepo.update({ id }, updateStudentDto);
 
+    const { lidId } = updateStudentDto;
+    if (lidId) {
+      const { lid } = await this.lidService.findOne(+lidId!);
+      await this.studentRepo.update({ id }, { lid });
+    }
     const student = await this.findOne(id);
     return {
       message: "Student data updated",

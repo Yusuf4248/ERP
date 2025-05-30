@@ -5,10 +5,16 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Event } from "./entities/event.entity";
 import { Branch } from "../branches/entities/branch.entity";
 import { BranchesModule } from "../branches/branches.module";
+import { EventsResolver } from "./events.resolver";
+import { EventParticipant } from "../event-participant/entities/event-participant.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Event, Branch]), BranchesModule],
+  imports: [
+    TypeOrmModule.forFeature([Event, Branch, EventParticipant]),
+    BranchesModule,
+  ],
   controllers: [EventsController],
-  providers: [EventsService],
+  providers: [EventsService, EventsResolver],
+  exports: [EventsService],
 })
 export class EventsModule {}

@@ -7,7 +7,7 @@ import { CreateEventDto } from "./dto/create-event.dto";
 import { UpdateEventDto } from "./dto/update-event.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Event } from "./entities/event.entity";
-import { Repository } from "typeorm";
+import { Between, Repository } from "typeorm";
 import { BranchesService } from "../branches/branches.service";
 import { FilterEventDto } from "./dto/filter-event.dto";
 
@@ -112,5 +112,17 @@ export class EventsService {
   async findByStatus(dto: FilterEventDto): Promise<Event[]> {
     const { is_active } = dto;
     return this.eventRepo.find({ where: { is_active } });
+  }
+
+  async findActiveEventsByDateRange(dto: FilterEventDto) {
+    const { start, end, is_active = true } = dto;
+
+    return await this.eventRepo.find({
+      where: {
+        start_time: Between(new Date(start!), new Date(end!)),
+        is_active,
+      },
+      order: { start_time: "ASC" },
+    });
   }
 }

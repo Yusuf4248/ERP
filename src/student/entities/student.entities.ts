@@ -4,6 +4,7 @@ import {
   Column,
   OneToMany,
   OneToOne,
+  JoinColumn,
 } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
@@ -12,6 +13,8 @@ import { StudentGroup } from "../../student-groups/entities/student-group.entity
 import { HomeworkSubmission } from "../../homework-submission/entities/homework-submission.entity";
 import { Grade } from "../../grades/entities/grade.entity";
 import { Lid } from "../../lid/entities/lid.entity";
+import { EventParticipant } from "../../event-participant/entities/event-participant.entity";
+import { Payment } from "../../payments/entities/payment.entity";
 
 @ObjectType()
 @Entity("student")
@@ -115,9 +118,24 @@ export class Student {
   )
   homework_submission: HomeworkSubmission[];
 
+  @Field(() => [Grade])
   @OneToMany(() => Grade, (grades) => grades.student)
   grades: Grade[];
 
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  lidId: number;
+
+  @Field(() => Lid)
   @OneToOne(() => Lid, (lid) => lid.student)
+  @JoinColumn({ name: "lidId" })
   lid: Lid;
+
+  @Field(() => [EventParticipant])
+  @OneToMany(() => EventParticipant, (ep) => ep.student)
+  eventParticipants: EventParticipant[];
+
+  @Field(() => [Payment])
+  @OneToMany(() => Payment, (payments) => payments.student)
+  payments: Payment;
 }

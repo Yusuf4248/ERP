@@ -21,15 +21,20 @@ export class GradesService {
     private readonly homeworkSubmissionService: HomeworkSubmissionService
   ) {}
   async create(createGradeDto: CreateGradeDto) {
-    const student = await this.studentService.findOne(createGradeDto.studentId);
-    const teacher = await this.teacherService.findOne(createGradeDto.teacherId);
-    const homework_submission = await this.homeworkSubmissionService.findOne(
-      createGradeDto.homeworkSubmissionId
+    const { student } = await this.studentService.findOne(
+      createGradeDto.studentId
     );
+    const { teacher } = await this.teacherService.findOne(
+      createGradeDto.teacherId
+    );
+    const { homework_submission } =
+      await this.homeworkSubmissionService.findOne(
+        createGradeDto.homeworkSubmissionId
+      );
     const newGrade = await this.gradeRepo.save({
-      student: student.student,
-      teacher: teacher.teacher,
-      homework_submission: homework_submission.homework_submission,
+      student,
+      teacher,
+      homework_submission,
       ...createGradeDto,
     });
     return {

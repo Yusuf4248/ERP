@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { CreateAttendanceDto } from "./dto/create-attendance.dto";
 import { UpdateAttendanceDto } from "./dto/update-attendance.dto";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -17,38 +21,76 @@ export class AttendanceService {
   ) {}
   async create(createAttendanceDto: CreateAttendanceDto) {
     const { scheduleId, studentId, ...otherDto } = createAttendanceDto;
-    const student = await this.studentService.findOne(studentId);
-    if (!student) {
-      throw new BadRequestException("Student Not Found!");
-    }
-    const schedule = await this.scheduleService.findOne(scheduleId);
-    if (!schedule) {
-      throw new BadRequestException("Schedule not found");
-    }
+    const { student } = await this.studentService.findOne(studentId);
+    const { schedule } = await this.scheduleService.findOne(scheduleId);
     const attendance = this.attendanceRepo.create({
       schedule: schedule,
-      student: student.student,
+      student: student,
       ...otherDto,
     });
     return this.attendanceRepo.save(attendance);
   }
 
-  findAll() {
-    return this.attendanceRepo.find({ relations: ["student", "schedule"] });
+  async findAll() {
+    const attendance = await this.attendanceRepo.find({
+      relations: ["student", "schedule"],
+    });
+    if (attendance.length == 0) {
+      throw new NotFoundException("Attendance not found");
+    }
+    return {
+      message: "All attandances",
+      success: true,
+      attendance,
+    };
   }
 
-  findOne(id: number) {
-    return this.attendanceRepo.findOne({
+  async findOne(id: number) {
+    if (!Number.isInteger(Number(id)) || Number(id) <= 0)
+      throw new BadRequestException(
+        "ID must be integer and must be greater than zero"
+      );
+    const attandance = await this.attendanceRepo.findOne({
       where: { id },
       relations: ["student", "schedule"],
     });
+    if (!attandance) {
+      throw new NotFoundException(`${id}-attandances not found`);
+    }
+    return {
+      message: `${id}-attandances`,
+      success: true,
+      attandance,
+    };
   }
 
-  update(id: number, updateAttendanceDto: UpdateAttendanceDto) {
-    return this.attendanceRepo.preload({ id, ...updateAttendanceDto });
+  async update(id: number, updateAttendanceDto: UpdateAttendanceDto) {
+    if (!Number.isInteger(Number(id)) || Number(id) <= 0)
+      throw new BadRequestException(
+        "ID must be integer and must be greater than zero"
+      );
+    await this.findOne(id);
+    await this.attendanceRepo.update({ id }, updateAttendanceDto);
+
+    const { attandance } = await this.findOne(id);
+    return {
+      message: `${id}-attandance data updated!`,
+      success: true,
+      attandance,
+    };
   }
 
-  remove(id: number) {
-    return this.attendanceRepo.delete({ id });
+  async remove(id: number) {
+    if (!Number.isInteger(Number(id)) || Number(id) <= 0)
+      throw new BadRequestException(
+        "ID must be integer and must be greater than zero"
+      );
+    await this.findOne(id);
+    await this.attendanceRepo.delete(id);
+
+    return {
+      message: `${id}-attandance deleted!`,
+      success: true,
+    };
   }
 }

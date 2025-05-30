@@ -110,6 +110,7 @@ export class Lid {
   @Field()
   refresh_token_hash: string;
 
+  @Field(() => Student)
   @OneToOne(() => Student, (student) => student.lid)
   student: Student;
 }

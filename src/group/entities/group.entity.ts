@@ -16,6 +16,7 @@ import { Schedule } from "../../schedules/entities/schedule.entity";
 import { StudentGroup } from "../../student-groups/entities/student-group.entity";
 import { Homework } from "../../homeworks/entities/homework.entity";
 import { Lid } from "../../lid/entities/lid.entity";
+import { Payment } from "../../payments/entities/payment.entity";
 
 export enum GroupStatus {
   NEW = "new",
@@ -94,12 +95,19 @@ export class Group {
   @OneToMany(() => Schedule, (schedule) => schedule.group)
   schedules: Schedule[];
 
+  @Field(() => [StudentGroup], { nullable: true })
   @OneToMany(() => StudentGroup, (studentgroup) => studentgroup.group)
   studentgroup: StudentGroup[];
 
+  @Field(() => [Homework], { nullable: true })
   @OneToMany(() => Homework, (homework) => homework.group)
   homework: Homework[];
 
+  @Field(() => [Lid], { nullable: true })
   @OneToMany(() => Lid, (lid) => lid.group)
   lid: Lid[];
+
+  @Field(() => [Payment], { nullable: true })
+  @OneToMany(() => Payment, (payments) => payments.group)
+  payments: Payment[];
 }

@@ -11,6 +11,8 @@ import { HomeworkSubmission } from "../homework-submission/entities/homework-sub
 import { Grade } from "../grades/entities/grade.entity";
 import { Lid } from "../lid/entities/lid.entity";
 import { LidModule } from "../lid/lid.module";
+import { EventParticipant } from "../event-participant/entities/event-participant.entity";
+import { Payment } from "../payments/entities/payment.entity";
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { LidModule } from "../lid/lid.module";
       HomeworkSubmission,
       Grade,
       Lid,
+      EventParticipant,
+      Payment,
     ]),
     LidModule,
   ],
