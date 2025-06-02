@@ -37,10 +37,6 @@ export class HomeworkSubmission {
   student: Student;
 
   @Field()
-  @Column()
-  file_url: string;
-
-  @Field()
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   submitted_at: Date;
 

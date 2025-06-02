@@ -22,6 +22,7 @@ import { PaymentsModule } from "./payments/payments.module";
 import { PaymentTypesModule } from "./payment-types/payment-types.module";
 import { ExamsModule } from "./exams/exams.module";
 import { ExamResultsModule } from "./exam-results/exam-results.module";
+import { MediaModule } from './media/media.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { ExamResultsModule } from "./exam-results/exam-results.module";
     PaymentTypesModule,
     ExamsModule,
     ExamResultsModule,
+    MediaModule,
   ],
   controllers: [],
   providers: [],

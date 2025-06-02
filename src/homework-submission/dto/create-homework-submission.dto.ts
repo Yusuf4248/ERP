@@ -23,16 +23,6 @@ export class CreateHomeworkSubmissionDto {
   homeworkId: number;
 
   @ApiProperty({
-    example: "https://example.com/file.pdf",
-    description: "Tugatib topshirilgan fayl URL manzili",
-  })
-  @IsString()
-  @IsNotEmpty()
-  @IsUrl()
-  @Field()
-  file_url: string;
-
-  @ApiProperty({
     example: "Vazifa murakkab edi, lekin bajardim.",
     description: "Izoh (ixtiyoriy)",
   })

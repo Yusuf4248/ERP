@@ -45,13 +45,4 @@ export class CreateHomeworkDto {
   @IsNotEmpty()
   @Field()
   deadline: Date;
-
-  @ApiProperty({
-    example: "https://example.com/homework.pdf",
-    description: "Fayl URL manzili",
-  })
-  @IsUrl()
-  @IsNotEmpty()
-  @Field()
-  file_url: string;
 }

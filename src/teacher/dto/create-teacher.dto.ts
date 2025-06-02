@@ -1,17 +1,18 @@
-import { Field, InputType } from "@nestjs/graphql";
+import { Field, InputType, Int } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import {
   IsString,
   IsEmail,
   IsEnum,
-  IsBoolean,
   IsNotEmpty,
   MinLength,
   MaxLength,
   Matches,
   IsPhoneNumber,
+  IsArray,
+  ArrayNotEmpty,
+  IsInt,
 } from "class-validator";
-import { Column } from "typeorm";
 
 @InputType()
 export class CreateTeacherDto {
@@ -60,12 +61,39 @@ export class CreateTeacherDto {
   @Field()
   role: "assistant teacher" | "main teacher";
 
-  @Field()
+  @ApiProperty({
+    example: [1, 2],
+    description: "IDs of exams the teacher is related to",
+    isArray: true,
+    type: Number,
+  })
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsInt({ each: true })
+  @Field(() => [Int])
   examId: number[];
 
-  @Field()
+  @ApiProperty({
+    example: [3, 4],
+    description: "IDs of groups the teacher is assigned to",
+    isArray: true,
+    type: Number,
+  })
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsInt({ each: true })
+  @Field(() => [Int])
   groupId: number[];
 
-  @Field()
+  @ApiProperty({
+    example: [5],
+    description: "IDs of branches the teacher works at",
+    isArray: true,
+    type: Number,
+  })
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsInt({ each: true })
+  @Field(() => [Int])
   branchId: number[];
 }

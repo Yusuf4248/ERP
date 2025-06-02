@@ -1,52 +1,47 @@
+import { Resolver, Query, Mutation, Args, Int } from "@nestjs/graphql";
 import { TeacherService } from "./teacher.service";
+import { Teacher } from "./entities/teacher.entity";
 import { CreateTeacherDto } from "./dto/create-teacher.dto";
 import { UpdateTeacherDto } from "./dto/update-teacher.dto";
 import { ChangePasswordDto } from "../student/dto/change-password.dto";
-import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
-import {
-  TeacherResponse,
-  FindAllTeachersResponse,
-  RemoveResponse,
-} from "./dto/responses";
-import { Teacher } from "./entities/teacher.entity";
 
-@Resolver("teacher")
+@Resolver(() => Teacher)
 export class TeacherResolver {
   constructor(private readonly teacherService: TeacherService) {}
 
-  @Mutation(() => TeacherResponse)
-  createTeacher(@Args("createTeacher") createTeacherDto: CreateTeacherDto) {
+  @Mutation(() => Teacher)
+  createTeacher(@Args("createTeacherDto") createTeacherDto: CreateTeacherDto) {
     return this.teacherService.create(createTeacherDto);
   }
 
-  @Query(() => FindAllTeachersResponse)
-  findAllTeacher() {
+  @Query(() => [Teacher], { name: "getAllTeachers" })
+  findAll() {
     return this.teacherService.findAll();
   }
 
-  @Query(() => TeacherResponse)
-  findOneTeacher(@Args("id", { type: () => ID }) id: string) {
-    return this.teacherService.findOne(+id);
-  }
-
-  @Mutation(() => TeacherResponse)
-  updateTeacher(
-    @Args("id", { type: () => ID }) id: string,
-    @Args("updateTeacher") updateTeacherDto: UpdateTeacherDto
-  ) {
-    return this.teacherService.update(+id, updateTeacherDto);
-  }
-
-  @Mutation(() => RemoveResponse)
-  removeTeacher(@Args("id", { type: () => ID }) id: string) {
-    return this.teacherService.remove(+id);
+  @Query(() => Teacher, { name: "getTeacher" })
+  findOne(@Args("id", { type: () => Int }) id: number) {
+    return this.teacherService.findOne(id);
   }
 
   @Mutation(() => Teacher)
-  changePasswordTeacher(
-    @Args("id", { type: () => ID }) id: string,
-    @Args("changePasswordTeacher") changePasswordDto: ChangePasswordDto
+  updateTeacher(
+    @Args("id", { type: () => Int }) id: number,
+    @Args("updateTeacherDto") updateTeacherDto: UpdateTeacherDto
   ) {
-    return this.teacherService.changePassword(+id, changePasswordDto);
+    return this.teacherService.update(id, updateTeacherDto);
+  }
+
+  @Mutation(() => Boolean)
+  removeTeacher(@Args("id", { type: () => Int }) id: number) {
+    return this.teacherService.remove(id);
+  }
+
+  @Mutation(() => Boolean)
+  changeTeacherPassword(
+    @Args("id", { type: () => Int }) id: number,
+    @Args("changePasswordDto") changePasswordDto: ChangePasswordDto
+  ) {
+    return this.teacherService.changePassword(id, changePasswordDto);
   }
 }
