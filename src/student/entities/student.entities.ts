@@ -5,16 +5,18 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
+  ManyToMany,
 } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Attendance } from "../../attendance/entities/attendance.entity";
-import { StudentGroup } from "../../student-groups/entities/student-group.entity";
 import { HomeworkSubmission } from "../../homework-submission/entities/homework-submission.entity";
 import { Grade } from "../../grades/entities/grade.entity";
 import { Lid } from "../../lid/entities/lid.entity";
-import { EventParticipant } from "../../event-participant/entities/event-participant.entity";
 import { Payment } from "../../payments/entities/payment.entity";
+import { Event } from "../../events/entities/event.entity";
+import { Group } from "../../group/entities/group.entity";
+import { ExamResult } from "../../exam-results/entities/exam-result.entity";
 
 @ObjectType()
 @Entity("student")
@@ -109,8 +111,8 @@ export class Student {
   @OneToMany(() => Attendance, (attendance) => attendance.student)
   attendance: Attendance[];
 
-  @OneToMany(() => StudentGroup, (studentgroup) => studentgroup.student)
-  studentgroup: StudentGroup[];
+  @ManyToMany(() => Group, (group) => group.students)
+  groups: Group[];
 
   @OneToMany(
     () => HomeworkSubmission,
@@ -131,11 +133,15 @@ export class Student {
   @JoinColumn({ name: "lidId" })
   lid: Lid;
 
-  @Field(() => [EventParticipant])
-  @OneToMany(() => EventParticipant, (ep) => ep.student)
-  eventParticipants: EventParticipant[];
+  @Field(() => [Event])
+  @ManyToMany(() => Event, (event) => event.students)
+  events: Event[];
 
   @Field(() => [Payment])
   @OneToMany(() => Payment, (payments) => payments.student)
   payments: Payment;
+
+  @Field(() => [ExamResult])
+  @OneToMany(() => ExamResult, (exam_result) => exam_result.student)
+  exam_result: ExamResult[];
 }

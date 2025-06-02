@@ -2,13 +2,14 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import {
   Column,
   Entity,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Branch } from "../../branches/entities/branch.entity";
-import { EventParticipant } from "../../event-participant/entities/event-participant.entity";
+import { Student } from "../../student/entities/student.entities";
 
 @ObjectType()
 @Entity("events")
@@ -65,7 +66,7 @@ export class Event {
   @ManyToOne(() => Branch, (branch) => branch.events)
   branch: Branch;
 
-  @Field(() => [EventParticipant])
-  @OneToMany(() => EventParticipant, (ep) => ep.event)
-  participants: EventParticipant[];
+  @Field(() => [Student])
+  @ManyToMany(() => Student, (student) => student.events)
+  students: Student[];
 }

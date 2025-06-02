@@ -6,11 +6,12 @@ import { Group } from "./entities/group.entity";
 import { Course } from "../courses/entities/course.entity";
 import { CoursesModule } from "../courses/courses.module";
 import { Schedule } from "../schedules/entities/schedule.entity";
-import { StudentGroup } from "../student-groups/entities/student-group.entity";
-import { TeacherGroup } from "../teacher-groups/entities/teacher-group.entity";
 import { Homework } from "../homeworks/entities/homework.entity";
 import { Lid } from "../lid/entities/lid.entity";
 import { Payment } from "../payments/entities/payment.entity";
+import { Exam } from "../exams/entities/exam.entity";
+import { Teacher } from "../teacher/entities/teacher.entity";
+import { Student } from "../student/entities/student.entities";
 
 @Module({
   imports: [
@@ -18,11 +19,12 @@ import { Payment } from "../payments/entities/payment.entity";
       Group,
       Course,
       Schedule,
-      StudentGroup,
-      TeacherGroup,
       Homework,
       Lid,
       Payment,
+      Exam,
+      Teacher,
+      Student,
     ]),
     CoursesModule,
   ],

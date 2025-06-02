@@ -6,13 +6,10 @@ import { Event } from "./entities/event.entity";
 import { Branch } from "../branches/entities/branch.entity";
 import { BranchesModule } from "../branches/branches.module";
 import { EventsResolver } from "./events.resolver";
-import { EventParticipant } from "../event-participant/entities/event-participant.entity";
+import { Student } from "../student/entities/student.entities";
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Event, Branch, EventParticipant]),
-    BranchesModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Event, Branch, Student]), BranchesModule],
   controllers: [EventsController],
   providers: [EventsService, EventsResolver],
   exports: [EventsService],

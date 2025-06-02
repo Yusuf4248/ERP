@@ -8,15 +8,18 @@ import { UpdateStudentDto } from "./dto/update-student.dto";
 import { Student } from "./entities/student.entities";
 import * as bcrypt from "bcrypt";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { ChangePasswordDto } from "./dto/change-password.dto";
 import { LidService } from "../lid/lid.service";
+import { Event } from "../events/entities/event.entity";
 
 @Injectable()
 export class StudentService {
   constructor(
     @InjectRepository(Student)
     private readonly studentRepo: Repository<Student>,
+    @InjectRepository(Event)
+    private readonly eventRepo: Repository<Event>,
     private readonly lidService: LidService
   ) {}
   async create(createStudentDto: CreateStudentDto) {
@@ -28,10 +31,14 @@ export class StudentService {
     }
     const hashshed_password = await bcrypt.hash(password_hash, 7);
     const { lid } = await this.lidService.findOne(+lidId!);
+    const events = await this.eventRepo.find({
+      where: { id: In(createStudentDto.eventsId!) },
+    });
     const newStudent = await this.studentRepo.save({
       ...createStudentDto,
       password_hash: hashshed_password,
       lid,
+      events,
     });
     return {
       message: "Student successfully created!",

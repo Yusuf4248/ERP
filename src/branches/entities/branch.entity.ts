@@ -1,9 +1,16 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Room } from "../../rooms/entities/room.entity";
 import { Admin } from "../../admin/entities/admin.entity";
 import { Event } from "../../events/entities/event.entity";
+import { Teacher } from "../../teacher/entities/teacher.entity";
 
 @ObjectType()
 @Entity("branches")
@@ -41,4 +48,7 @@ export class Branch {
 
   @OneToMany(() => Event, (event) => event.branch)
   events: Event[];
+
+  @ManyToMany(() => Teacher, (teacher) => teacher.branches)
+  teachers: Teacher[];
 }

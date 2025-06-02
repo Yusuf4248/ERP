@@ -9,6 +9,7 @@ import {
 import { Branch } from "../../branches/entities/branch.entity";
 import { ApiProperty } from "@nestjs/swagger";
 import { Schedule } from "../../schedules/entities/schedule.entity";
+import { Exam } from "../../exams/entities/exam.entity";
 
 @ObjectType()
 @Entity("rooms")
@@ -48,4 +49,8 @@ export class Room {
   @Field(() => [Schedule])
   @OneToMany(() => Schedule, (schedules) => schedules.room)
   schedules: Schedule[];
+
+  @Field(() => [Exam])
+  @OneToMany(() => Exam, (exam) => exam.room)
+  exams: Exam[];
 }

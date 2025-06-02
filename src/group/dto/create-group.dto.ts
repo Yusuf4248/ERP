@@ -32,4 +32,8 @@ export class CreateGroupDto {
   @ApiProperty({ enum: GroupStatus, example: GroupStatus.NEW })
   @IsEnum(GroupStatus)
   status: GroupStatus;
+
+  teacherId: number[];
+
+  studentsId: number[];
 }

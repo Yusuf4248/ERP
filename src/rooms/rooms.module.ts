@@ -7,9 +7,13 @@ import { Branch } from "../branches/entities/branch.entity";
 import { BranchesModule } from "../branches/branches.module";
 import { RoomResolver } from "./rooms.resolver";
 import { Schedule } from "../schedules/entities/schedule.entity";
+import { Exam } from "../exams/entities/exam.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Room, Branch, Schedule]), BranchesModule],
+  imports: [
+    TypeOrmModule.forFeature([Room, Branch, Schedule, Exam]),
+    BranchesModule,
+  ],
   controllers: [RoomsController],
   providers: [RoomsService, RoomResolver],
   exports: [RoomsService],

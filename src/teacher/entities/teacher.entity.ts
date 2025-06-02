@@ -5,12 +5,15 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToMany,
 } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { TeacherGroup } from "../../teacher-groups/entities/teacher-group.entity";
 import { Homework } from "../../homeworks/entities/homework.entity";
 import { Grade } from "../../grades/entities/grade.entity";
+import { Exam } from "../../exams/entities/exam.entity";
+import { Group } from "../../group/entities/group.entity";
+import { Branch } from "../../branches/entities/branch.entity";
 
 @ObjectType()
 @Entity("teacher")
@@ -70,13 +73,19 @@ export class Teacher {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToMany(() => TeacherGroup, (tg) => tg.teacher)
-  @Field(() => [TeacherGroup])
-  teacherGroups: TeacherGroup[];
+  @ManyToMany(() => Group, (group) => group.teachers)
+  @Field(() => [Group])
+  groups: Group[];
 
   @OneToMany(() => Homework, (homework) => homework.teacher)
   homework: Homework[];
 
   @OneToMany(() => Grade, (grades) => grades.teacher)
   grades: Grade[];
+
+  @ManyToMany(() => Exam, (exam) => exam.teacher)
+  exam: Exam[];
+
+  @ManyToMany(() => Branch, (branch) => branch.teachers)
+  branches: Branch[];
 }

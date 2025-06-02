@@ -7,21 +7,30 @@ import { CreateEventDto } from "./dto/create-event.dto";
 import { UpdateEventDto } from "./dto/update-event.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Event } from "./entities/event.entity";
-import { Between, Repository } from "typeorm";
+import { Between, In, Repository } from "typeorm";
 import { BranchesService } from "../branches/branches.service";
 import { FilterEventDto } from "./dto/filter-event.dto";
+import { Student } from "../student/entities/student.entities";
 
 @Injectable()
 export class EventsService {
   constructor(
     @InjectRepository(Event) private readonly eventRepo: Repository<Event>,
+    @InjectRepository(Student)
+    private readonly studentRepo: Repository<Student>,
     private readonly branchService: BranchesService
   ) {}
   async create(createEventDto: CreateEventDto) {
-    const branch = await this.branchService.findOne(createEventDto.branchId);
+    const { branch } = await this.branchService.findOne(
+      createEventDto.branchId
+    );
+    const students = await this.studentRepo.find({
+      where: { id: In(createEventDto.studentsId) },
+    });
     const newEvent = await this.eventRepo.save({
       ...createEventDto,
-      branch: branch.branch,
+      branch,
+      students,
     });
     return {
       message: "New event created!",

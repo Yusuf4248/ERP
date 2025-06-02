@@ -9,20 +9,19 @@ import { CoursesModule } from "./courses/courses.module";
 import { GroupModule } from "./group/group.module";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
-import { TeacherGroupsModule } from "./teacher-groups/teacher-groups.module";
 import { SchedulesModule } from "./schedules/schedules.module";
 import { AttendanceModule } from "./attendance/attendance.module";
-import { StudentGroupsModule } from "./student-groups/student-groups.module";
-import { HomeworksModule } from './homeworks/homeworks.module';
-import { HomeworkSubmissionModule } from './homework-submission/homework-submission.module';
-import { GradesModule } from './grades/grades.module';
-import { LidModule } from './lid/lid.module';
-import { BranchesModule } from './branches/branches.module';
-import { RoomsModule } from './rooms/rooms.module';
-import { EventsModule } from './events/events.module';
-import { EventParticipantModule } from './event-participant/event-participant.module';
-import { PaymentsModule } from './payments/payments.module';
-import { PaymentTypesModule } from './payment-types/payment-types.module';
+import { HomeworksModule } from "./homeworks/homeworks.module";
+import { HomeworkSubmissionModule } from "./homework-submission/homework-submission.module";
+import { GradesModule } from "./grades/grades.module";
+import { LidModule } from "./lid/lid.module";
+import { BranchesModule } from "./branches/branches.module";
+import { RoomsModule } from "./rooms/rooms.module";
+import { EventsModule } from "./events/events.module";
+import { PaymentsModule } from "./payments/payments.module";
+import { PaymentTypesModule } from "./payment-types/payment-types.module";
+import { ExamsModule } from "./exams/exams.module";
+import { ExamResultsModule } from "./exam-results/exam-results.module";
 
 @Module({
   imports: [
@@ -43,6 +42,7 @@ import { PaymentTypesModule } from './payment-types/payment-types.module';
       entities: [],
       synchronize: true,
       autoLoadEntities: true,
+      dropSchema: false,
     }),
     StudentModule,
     AdminModule,
@@ -50,10 +50,8 @@ import { PaymentTypesModule } from './payment-types/payment-types.module';
     AuthModule,
     CoursesModule,
     GroupModule,
-    TeacherGroupsModule,
     SchedulesModule,
     AttendanceModule,
-    StudentGroupsModule,
     HomeworksModule,
     HomeworkSubmissionModule,
     GradesModule,
@@ -61,9 +59,10 @@ import { PaymentTypesModule } from './payment-types/payment-types.module';
     BranchesModule,
     RoomsModule,
     EventsModule,
-    EventParticipantModule,
     PaymentsModule,
     PaymentTypesModule,
+    ExamsModule,
+    ExamResultsModule,
   ],
   controllers: [],
   providers: [],

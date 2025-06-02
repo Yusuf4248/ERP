@@ -70,4 +70,7 @@ export class CreateEventDto {
   @IsInt()
   @IsPositive()
   branchId: number;
+
+  @Field(() => [Int])
+  studentsId: number[];
 }

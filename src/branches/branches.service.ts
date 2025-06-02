@@ -7,15 +7,24 @@ import { CreateBranchDto } from "./dto/create-branch.dto";
 import { UpdateBranchDto } from "./dto/update-branch.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Branch } from "./entities/branch.entity";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
+import { Teacher } from "../teacher/entities/teacher.entity";
 
 @Injectable()
 export class BranchesService {
   constructor(
-    @InjectRepository(Branch) private readonly branchRepo: Repository<Branch>
+    @InjectRepository(Branch) private readonly branchRepo: Repository<Branch>,
+    @InjectRepository(Branch) private readonly teacherRepo: Repository<Teacher>
   ) {}
   async create(createBranchDto: CreateBranchDto) {
-    const newBranch = await this.branchRepo.save(createBranchDto);
+    const teachers = await this.teacherRepo.find({
+      where: { id: In(createBranchDto.teachersId) },
+    });
+    const newBranch = await this.branchRepo.save({
+      ...createBranchDto,
+      teachers,
+    });
+
     return {
       message: "New branch created",
       success: true,
@@ -24,7 +33,7 @@ export class BranchesService {
   }
 
   async findAll() {
-    const branch = await this.branchRepo.find();
+    const branch = await this.branchRepo.find({ relations: ["teachers"] });
     if (branch.length == 0) {
       throw new NotFoundException("Branch not found");
     }
@@ -41,7 +50,10 @@ export class BranchesService {
         "ID must be integer and must be greater than zero"
       );
     }
-    const branch = await this.branchRepo.findOne({ where: { id } });
+    const branch = await this.branchRepo.findOne({
+      where: { id },
+      relations: ["teachers"],
+    });
     if (!branch) {
       throw new NotFoundException(`${id}-branch not found`);
     }

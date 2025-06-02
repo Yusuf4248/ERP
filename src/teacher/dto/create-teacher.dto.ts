@@ -11,6 +11,7 @@ import {
   Matches,
   IsPhoneNumber,
 } from "class-validator";
+import { Column } from "typeorm";
 
 @InputType()
 export class CreateTeacherDto {
@@ -58,4 +59,13 @@ export class CreateTeacherDto {
   @IsEnum(["assistant teacher", "main teacher"])
   @Field()
   role: "assistant teacher" | "main teacher";
+
+  @Field()
+  examId: number[];
+
+  @Field()
+  groupId: number[];
+
+  @Field()
+  branchId: number[];
 }

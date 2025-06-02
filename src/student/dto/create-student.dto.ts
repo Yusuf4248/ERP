@@ -12,6 +12,7 @@ import {
   IsOptional,
 } from "class-validator";
 import { Lid } from "../../lid/entities/lid.entity";
+import { Group } from "../../group/entities/group.entity";
 
 @InputType()
 export class CreateStudentDto {
@@ -93,4 +94,14 @@ export class CreateStudentDto {
   @IsOptional()
   @Field(() => Lid, { nullable: true })
   lidId?: number;
+
+  @ApiProperty({ example: 1, description: "Tegishli event ID si" })
+  @IsInt()
+  @Field(() => [Event], { nullable: true })
+  eventsId: number[];
+
+  @ApiProperty({ example: 1, description: "Tegishli group ID si" })
+  @IsInt()
+  @Field(() => [Group], { nullable: true })
+  groupsId: number[];
 }

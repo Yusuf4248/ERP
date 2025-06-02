@@ -7,20 +7,42 @@ import { CreateTeacherDto } from "./dto/create-teacher.dto";
 import { UpdateTeacherDto } from "./dto/update-teacher.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Teacher } from "./entities/teacher.entity";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import * as bcrypt from "bcrypt";
 import { ChangePasswordDto } from "../student/dto/change-password.dto";
+import { Exam } from "../exams/entities/exam.entity";
+import { Group } from "../group/entities/group.entity";
+import { Branch } from "../branches/entities/branch.entity";
 
 @Injectable()
 export class TeacherService {
   constructor(
-    @InjectRepository(Teacher) private readonly teacherRepo: Repository<Teacher>
+    @InjectRepository(Teacher)
+    private readonly teacherRepo: Repository<Teacher>,
+    @InjectRepository(Exam)
+    private readonly examRepo: Repository<Exam>,
+    @InjectRepository(Group)
+    private readonly groupRepo: Repository<Group>,
+    @InjectRepository(Group)
+    private readonly branchRepo: Repository<Branch>
   ) {}
   async create(createTeacherDto: CreateTeacherDto) {
     const hashshed_password = await bcrypt.hash(createTeacherDto.password, 7);
+    const exam = await this.examRepo.find({
+      where: { id: In(createTeacherDto.examId) },
+    });
+    const groups = await this.groupRepo.find({
+      where: { id: In(createTeacherDto.groupId) },
+    });
+    const branches = await this.branchRepo.find({
+      where: { id: In(createTeacherDto.branchId) },
+    });
     const newTeacher = await this.teacherRepo.save({
       ...createTeacherDto,
       password: hashshed_password,
+      exam,
+      groups,
+      branches,
     });
     return {
       message: "Teacher created successfully",
@@ -30,7 +52,9 @@ export class TeacherService {
   }
 
   async findAll() {
-    const teachers = await this.teacherRepo.find();
+    const teachers = await this.teacherRepo.find({
+      relations: ["exam", "groups", "branches"],
+    });
     if (!teachers) {
       throw new BadRequestException("Teacher not found");
     }
@@ -46,7 +70,10 @@ export class TeacherService {
         "ID must be integer and must be greater than zero"
       );
     }
-    const teacher = await this.teacherRepo.findOneBy({ id });
+    const teacher = await this.teacherRepo.findOne({
+      where: { id },
+      relations: ["exam", "groups", "branches"],
+    });
     if (!teacher) {
       throw new BadRequestException(`teacher with ${id}-id not found`);
     }

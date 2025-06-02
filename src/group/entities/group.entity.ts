@@ -8,15 +8,17 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  ManyToMany,
 } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Course } from "../../courses/entities/course.entity";
-import { TeacherGroup } from "../../teacher-groups/entities/teacher-group.entity";
 import { Schedule } from "../../schedules/entities/schedule.entity";
-import { StudentGroup } from "../../student-groups/entities/student-group.entity";
 import { Homework } from "../../homeworks/entities/homework.entity";
 import { Lid } from "../../lid/entities/lid.entity";
 import { Payment } from "../../payments/entities/payment.entity";
+import { Exam } from "../../exams/entities/exam.entity";
+import { Teacher } from "../../teacher/entities/teacher.entity";
+import { Student } from "../../student/entities/student.entities";
 
 export enum GroupStatus {
   NEW = "new",
@@ -87,17 +89,17 @@ export class Group {
   @JoinColumn({ name: "course_id" })
   course: Course;
 
-  @OneToMany(() => TeacherGroup, (tg) => tg.group)
-  @Field(() => [TeacherGroup])
-  teacherGroups: TeacherGroup[];
+  @ManyToMany(() => Teacher, (teacher) => teacher.groups)
+  @Field(() => [Teacher])
+  teachers: Teacher[];
 
   @Field(() => [Schedule], { nullable: true })
   @OneToMany(() => Schedule, (schedule) => schedule.group)
   schedules: Schedule[];
 
-  @Field(() => [StudentGroup], { nullable: true })
-  @OneToMany(() => StudentGroup, (studentgroup) => studentgroup.group)
-  studentgroup: StudentGroup[];
+  @Field(() => [Student], { nullable: true })
+  @OneToMany(() => Student, (student) => student.groups)
+  students: Student[];
 
   @Field(() => [Homework], { nullable: true })
   @OneToMany(() => Homework, (homework) => homework.group)
@@ -110,4 +112,8 @@ export class Group {
   @Field(() => [Payment], { nullable: true })
   @OneToMany(() => Payment, (payments) => payments.group)
   payments: Payment[];
+
+  @Field(() => [Exam])
+  @OneToMany(() => Exam, (exam) => exam.group)
+  exams: Exam[];
 }
