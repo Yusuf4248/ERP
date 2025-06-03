@@ -82,8 +82,9 @@ export class Lid {
   trial_lesson_date: Date;
 
   @ApiProperty({ description: "Lid qaysi guruhga tegishli" })
-  @ManyToOne(() => Group, (group) => group.lid)
-  group: Group;
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  groupId: number;
 
   @ApiProperty({
     enum: LidStatus,
@@ -102,6 +103,10 @@ export class Lid {
   @Field({ nullable: true })
   cancel_reason: string;
 
+  @Field({ defaultValue: false, nullable: true })
+  @Column({ type: "boolean", default: false, nullable: true })
+  is_active: boolean;
+
   @ApiProperty({
     example: "hashed_refresh_token",
     description: "Refresh token hash qiymati",
@@ -109,8 +114,4 @@ export class Lid {
   @Column({ default: "" })
   @Field()
   refresh_token_hash: string;
-
-  @Field(() => Student)
-  @OneToOne(() => Student, (student) => student.lid)
-  student: Student;
 }

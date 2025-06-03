@@ -7,9 +7,15 @@ import { Group } from "../group/entities/group.entity";
 import { GroupModule } from "../group/group.module";
 import { Student } from "../student/entities/student.entities";
 import { LidResolver } from "./lid.resolver";
+import { Otp } from "./entities/otp.entity";
+import { MailModule } from "../mail/mail.module";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Lid, Group, Student]), GroupModule],
+  imports: [
+    TypeOrmModule.forFeature([Lid, Group, Student, Otp]),
+    GroupModule,
+    MailModule,
+  ],
   controllers: [LidController],
   providers: [LidService, LidResolver],
   exports: [LidService],

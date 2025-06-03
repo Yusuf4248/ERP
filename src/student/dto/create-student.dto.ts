@@ -10,6 +10,7 @@ import {
   MaxLength,
   IsInt,
   IsOptional,
+  IsArray,
 } from "class-validator";
 import { Lid } from "../../lid/entities/lid.entity";
 import { Group } from "../../group/entities/group.entity";
@@ -92,16 +93,20 @@ export class CreateStudentDto {
   @ApiProperty({ example: 1, description: "Tegishli Lid ID si" })
   @IsInt()
   @IsOptional()
-  @Field(() => Lid, { nullable: true })
+  @Field()
   lidId?: number;
 
   @ApiProperty({ example: 1, description: "Tegishli event ID si" })
   @IsInt()
+  @IsOptional()
+  @IsArray()
   @Field(() => [Event], { nullable: true })
-  eventsId: number[];
+  eventsId?: number[];
 
   @ApiProperty({ example: 1, description: "Tegishli group ID si" })
   @IsInt()
+  @IsOptional()
+  @IsArray()
   @Field(() => [Group], { nullable: true })
-  groupsId: number[];
+  groupsId?: number[];
 }

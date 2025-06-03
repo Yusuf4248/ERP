@@ -6,11 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  ParseIntPipe,
+  UploadedFile,
 } from "@nestjs/common";
 import { StudentService } from "./student.service";
 import { CreateStudentDto } from "./dto/create-student.dto";
 import { UpdateStudentDto } from "./dto/update-student.dto";
 import { ChangePasswordDto } from "./dto/change-password.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { Multer } from "multer";
 
 @Controller("student")
 export class StudentController {
@@ -47,5 +52,14 @@ export class StudentController {
     @Body() changePasswordDto: ChangePasswordDto
   ) {
     return this.studentService.changePassword(+id, changePasswordDto);
+  }
+
+  @Post(":id/avatar")
+  @UseInterceptors(FileInterceptor("file"))
+  async uploadAvatar(
+    @Param("id", ParseIntPipe) id: number,
+    @UploadedFile() file: Express.Multer.File
+  ) {
+    return this.studentService.uploadAvatar(id, file);
   }
 }

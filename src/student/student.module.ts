@@ -11,6 +11,7 @@ import { Lid } from "../lid/entities/lid.entity";
 import { LidModule } from "../lid/lid.module";
 import { Payment } from "../payments/entities/payment.entity";
 import { Group } from "../group/entities/group.entity";
+import { FileModule } from "../file/file.module";
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { Group } from "../group/entities/group.entity";
       Group,
     ]),
     LidModule,
+    FileModule,
   ],
   controllers: [StudentController],
   providers: [StudentResolver, StudentService],

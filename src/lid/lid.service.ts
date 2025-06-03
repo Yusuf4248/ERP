@@ -2,24 +2,32 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  ServiceUnavailableException,
 } from "@nestjs/common";
 import { CreateLidDto } from "./dto/create-lid.dto";
 import { UpdateLidDto } from "./dto/update-lid.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Lid, LidStatus } from "./entities/lid.entity";
 import { Repository } from "typeorm";
-import { GroupService } from "../group/group.service";
 import * as bcrypt from "bcrypt";
+import * as otpGenerator from "otp-generator";
+import * as uuid from "uuid";
 import { ChangePasswordDto } from "../student/dto/change-password.dto";
+import { AddMinutesToDate } from "../common/helpers/add-minute";
+import { Otp } from "./entities/otp.entity";
+import { MailService } from "../mail/mail.service";
+import { decode, encode } from "../common/helpers/crypto";
+import { VerifyOtpDto } from "./dto/verify-otp.dto";
 
 @Injectable()
 export class LidService {
   constructor(
     @InjectRepository(Lid) private readonly lidRepo: Repository<Lid>,
-    private readonly groupService: GroupService
+    @InjectRepository(Otp) private readonly otpRepo: Repository<Otp>,
+    private readonly mailService: MailService
   ) {}
   async create(createLidDto: CreateLidDto) {
-    const { confirm_password, password } = createLidDto;
+    const { confirm_password, password, email } = createLidDto;
     if (password !== confirm_password) {
       throw new BadRequestException(
         "Password and confirm_password do not match"
@@ -30,15 +38,20 @@ export class LidService {
       ...createLidDto,
       password_hash: hashshed_password,
     });
-    return {
-      message: "New lid created",
-      success: true,
-      newLid,
-    };
+    try {
+      const res = await this.generateNewOtp(email);
+      return {
+        res,
+        newLid,
+      };
+    } catch (error) {
+      console.log(error);
+      throw new ServiceUnavailableException("Emailga otp yuborishda xatolik");
+    }
   }
 
   async findAll() {
-    const lid = await this.lidRepo.find({ relations: ["group"] });
+    const lid = await this.lidRepo.find();
     if (lid.length == 0) {
       throw new NotFoundException("Lids not found");
     }
@@ -57,7 +70,6 @@ export class LidService {
     }
     const lid = await this.lidRepo.findOne({
       where: { id },
-      relations: ["group"],
     });
     if (!lid) {
       throw new NotFoundException(`${id}-lid not found`);
@@ -128,11 +140,85 @@ export class LidService {
 
     return { message: "Password successfully changed", new_pass: password };
   }
+
   async findByStatus(status: LidStatus) {
     const lids = await this.lidRepo.find({ where: { lid_status: status } });
     return {
       count: lids.length,
       data: lids,
+    };
+  }
+
+  async generateNewOtp(email: string) {
+    const otp = otpGenerator.generate(4, {
+      lowerCaseAlphabets: false,
+      upperCaseAlphabets: false,
+      specialChars: false,
+    });
+    const now = new Date();
+    const expiration_time = AddMinutesToDate(now, 3);
+
+    await this.otpRepo.delete({ email });
+
+    const newOtp = await this.otpRepo.save({
+      id: uuid.v4(),
+      otp,
+      email,
+      expiration_time,
+    });
+
+    await this.mailService.sendOtpMail(email, otp);
+
+    const details = {
+      timestamp: now,
+      email,
+      otp_id: newOtp.id,
+    };
+
+    const verification_key = await encode(JSON.stringify(details));
+
+    return {
+      message: "Otp emailga yuborildi",
+      verification_key,
+      otp_id: newOtp.id,
+    };
+  }
+
+  async verifyOtp(otp_id: string, verifyOtpDto: VerifyOtpDto) {
+    let otp_details;
+    const currentDate = new Date();
+    if (verifyOtpDto.verification_key) {
+      const decodedData = await decode(verifyOtpDto.verification_key);
+      otp_details = JSON.parse(decodedData);
+    } else {
+      otp_details = await this.otpRepo.findOne({ where: { id: otp_id } });
+    }
+    if (otp_details.email !== verifyOtpDto.email) {
+      throw new BadRequestException("Otp bu emailga yuborilmagan");
+    }
+    const otp = await this.otpRepo.findOne({ where: { id: otp_id } });
+    if (otp == null) {
+      throw new NotFoundException("Bunday otp yo'q");
+    }
+    if (otp.verified) {
+      throw new BadRequestException("Bu otp avval tekshirilgan");
+    }
+    if (otp.expiration_time < currentDate) {
+      throw new BadRequestException("Bu otpni vaqti tugagan");
+    }
+    if (otp.otp !== verifyOtpDto.otp) {
+      throw new BadRequestException("Otp mos emas");
+    }
+
+    const user = await this.lidRepo.update(
+      { email: otp.email },
+      { is_active: true }
+    );
+
+    await this.otpRepo.update({ id: otp.id }, { verified: true });
+
+    return {
+      message: "Tabriklayman, siz aktivatsiyadan o'tdingiz",
     };
   }
 }

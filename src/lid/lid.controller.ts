@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
+  HttpStatus,
 } from "@nestjs/common";
 import { LidService } from "./lid.service";
 import { CreateLidDto } from "./dto/create-lid.dto";
@@ -17,6 +19,8 @@ import {
   ApiBody,
   ApiOkResponse,
 } from "@nestjs/swagger";
+import { LidEmailDto } from "./dto/email.dto";
+import { VerifyOtpDto } from "./dto/verify-otp.dto";
 
 @Controller("lid")
 export class LidController {
@@ -88,5 +92,17 @@ export class LidController {
   })
   async getLidsByStatus(@Body() body: GetLidsByStatusDto) {
     return this.lidService.findByStatus(body.status);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post("new_otp")
+  async newOtp(@Body() body: LidEmailDto) {
+    return this.lidService.generateNewOtp(body.email);
+  }
+
+  @HttpCode(200)
+  @Post("verifyOtp/:id")
+  verifyOtp(@Body() verifyOtpDto: VerifyOtpDto, @Param("id") otp_id: string) {
+    return this.lidService.verifyOtp(otp_id, verifyOtpDto);
   }
 }

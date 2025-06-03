@@ -22,7 +22,9 @@ import { PaymentsModule } from "./payments/payments.module";
 import { PaymentTypesModule } from "./payment-types/payment-types.module";
 import { ExamsModule } from "./exams/exams.module";
 import { ExamResultsModule } from "./exam-results/exam-results.module";
-import { MediaModule } from './media/media.module';
+import { MediaModule } from "./media/media.module";
+import { MailModule } from './mail/mail.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -65,6 +67,8 @@ import { MediaModule } from './media/media.module';
     ExamsModule,
     ExamResultsModule,
     MediaModule,
+    MailModule,
+    FileModule,
   ],
   controllers: [],
   providers: [],

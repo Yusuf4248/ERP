@@ -111,7 +111,7 @@ export class Student {
   @OneToMany(() => Attendance, (attendance) => attendance.student)
   attendance: Attendance[];
 
-  @ManyToMany(() => Group, (group) => group.students)
+  @ManyToMany(() => Group, (group) => group.students, { nullable: true })
   groups: Group[];
 
   @OneToMany(
@@ -128,13 +128,8 @@ export class Student {
   @Field({ nullable: true })
   lidId: number;
 
-  @Field(() => Lid)
-  @OneToOne(() => Lid, (lid) => lid.student)
-  @JoinColumn({ name: "lidId" })
-  lid: Lid;
-
   @Field(() => [Event])
-  @ManyToMany(() => Event, (event) => event.students)
+  @ManyToMany(() => Event, (event) => event.students, { nullable: true })
   events: Event[];
 
   @Field(() => [Payment])

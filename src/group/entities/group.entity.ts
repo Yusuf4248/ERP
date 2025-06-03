@@ -105,10 +105,6 @@ export class Group {
   @OneToMany(() => Homework, (homework) => homework.group)
   homework: Homework[];
 
-  @Field(() => [Lid], { nullable: true })
-  @OneToMany(() => Lid, (lid) => lid.group)
-  lid: Lid[];
-
   @Field(() => [Payment], { nullable: true })
   @OneToMany(() => Payment, (payments) => payments.group)
   payments: Payment[];
