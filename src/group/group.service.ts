@@ -23,14 +23,19 @@ export class GroupService {
     private readonly courseService: CoursesService
   ) {}
   async create(createGroupDto: CreateGroupDto) {
-    const { course_id } = createGroupDto;
+    let teachers: Teacher[] = [];
+    let students: Student[] = [];
+    const { course_id, teacherId, studentsId } = createGroupDto;
     const { course } = await this.courseService.findOne(+course_id);
-    const teachers = await this.teacherRepo.find({
-      where: { id: In(createGroupDto.teacherId) },
-    });
-    const students = await this.studentRepo.find({
-      where: { id: In(createGroupDto.studentsId) },
-    });
+    if (teacherId && studentsId) {
+      teachers = await this.teacherRepo.find({
+        where: { id: In(teacherId) },
+      });
+      students = await this.studentRepo.find({
+        where: { id: In(studentsId) },
+      });
+    }
+
     const newGroup = await this.groupRepo.save({
       ...createGroupDto,
       course,
@@ -45,9 +50,7 @@ export class GroupService {
   }
 
   async findAll() {
-    const groups = await this.groupRepo.find({
-      relations: ["course", "teachers"],
-    });
+    const groups = await this.groupRepo.find({});
     if (groups.length == 0) {
       throw new NotFoundException("Groups not found");
     }

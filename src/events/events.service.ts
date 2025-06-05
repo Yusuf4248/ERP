@@ -21,12 +21,15 @@ export class EventsService {
     private readonly branchService: BranchesService
   ) {}
   async create(createEventDto: CreateEventDto) {
+    let students: Student[] = [];
     const { branch } = await this.branchService.findOne(
       createEventDto.branchId
     );
-    const students = await this.studentRepo.find({
-      where: { id: In(createEventDto.studentsId) },
-    });
+    if (createEventDto.studentsId) {
+      students = await this.studentRepo.find({
+        where: { id: In(createEventDto.studentsId) },
+      });
+    }
     const newEvent = await this.eventRepo.save({
       ...createEventDto,
       branch,
@@ -40,7 +43,9 @@ export class EventsService {
   }
 
   async findAll() {
-    const events = await this.eventRepo.find({ relations: ["branch"] });
+    const events = await this.eventRepo.find({
+      relations: ["branch", "students"],
+    });
     if (events.length == 0) {
       throw new NotFoundException("Events not found");
     }
@@ -59,7 +64,7 @@ export class EventsService {
     }
     const event = await this.eventRepo.findOne({
       where: { id },
-      relations: ["branch"],
+      relations: ["branch", "students"],
     });
     if (!event) {
       throw new NotFoundException(`${id}-event not found`);

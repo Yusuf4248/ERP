@@ -9,12 +9,14 @@ import { Student } from "../student/entities/student.entities";
 import { LidResolver } from "./lid.resolver";
 import { Otp } from "./entities/otp.entity";
 import { MailModule } from "../mail/mail.module";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Lid, Group, Student, Otp]),
     GroupModule,
     MailModule,
+    JwtModule,
   ],
   controllers: [LidController],
   providers: [LidService, LidResolver],

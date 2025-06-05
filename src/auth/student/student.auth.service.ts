@@ -20,7 +20,7 @@ export class StudentAuthService {
     const payload = {
       id: student.id,
       email: student.email,
-      role: "STUDENT",
+      role: "student",
     };
 
     const [accessToken, refreshToken] = await Promise.all([

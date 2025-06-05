@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { CoursesService } from "./courses.service";
 import { UpdateCourseDto } from "./dto/update-course.dto";
@@ -16,13 +17,20 @@ import {
   ApiResponse,
   ApiBody,
   ApiParam,
+  ApiBearerAuth,
 } from "@nestjs/swagger";
+import { Roles } from "../app.constants";
+import { AuthGuard } from "../common/guards/auth.guard";
+import { RolesGuard } from "../common/guards/role.guard";
 
 @ApiTags("Courses")
+@ApiBearerAuth()
 @Controller("courses")
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin")
   @Post()
   @ApiOperation({ summary: "Create a new course" })
   @ApiResponse({ status: 201, description: "Course successfully created." })
@@ -47,6 +55,8 @@ export class CoursesController {
     return this.coursesService.findOne(+id);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin")
   @Patch(":id")
   @ApiOperation({ summary: "Update a course by ID" })
   @ApiParam({ name: "id", type: Number })
@@ -56,6 +66,8 @@ export class CoursesController {
     return this.coursesService.update(+id, updateCourseDto);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin")
   @Delete(":id")
   @ApiOperation({ summary: "Delete a course by ID" })
   @ApiParam({ name: "id", type: Number })

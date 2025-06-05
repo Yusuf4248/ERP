@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany,
   ManyToMany,
+  JoinTable,
 } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
@@ -65,6 +66,14 @@ export class Teacher {
   @Column({ type: "varchar", nullable: true })
   refersh_token_hash: string;
 
+  @ApiProperty({
+    example: "https://example.com/uploads/avatar.jpg",
+    description: "Profil rasmi uchun URL",
+  })
+  @Column({ nullable: true, default: "" })
+  @Field({ nullable: true, defaultValue: "" })
+  avatar_url: string;
+
   @Field()
   @CreateDateColumn()
   created_at: Date;
@@ -73,8 +82,9 @@ export class Teacher {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @ManyToMany(() => Group, (group) => group.teachers)
-  @Field(() => [Group])
+  @ManyToMany(() => Group, (group) => group.teachers, { nullable: true })
+  @Field(() => [Group], { nullable: true })
+  @JoinTable()
   groups: Group[];
 
   @OneToMany(() => Homework, (homework) => homework.teacher)
@@ -83,9 +93,13 @@ export class Teacher {
   @OneToMany(() => Grade, (grades) => grades.teacher)
   grades: Grade[];
 
-  @ManyToMany(() => Exam, (exam) => exam.teacher)
+  @Field({ nullable: true })
+  @JoinTable()
+  @ManyToMany(() => Exam, (exam) => exam.teacher, { nullable: true })
   exam: Exam[];
 
-  @ManyToMany(() => Branch, (branch) => branch.teachers)
+  @Field({ nullable: true })
+  @ManyToMany(() => Branch, (branch) => branch.teachers, { nullable: true })
+  @JoinTable()
   branches: Branch[];
 }

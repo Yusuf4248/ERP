@@ -11,11 +11,12 @@ import * as bcrypt from "bcrypt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { In, Repository } from "typeorm";
 import { ChangePasswordDto } from "./dto/change-password.dto";
-import { LidService } from "../lid/lid.service";
 import { Event } from "../events/entities/event.entity";
 import { FileService } from "../file/file.service";
 import { Group } from "../group/entities/group.entity";
 import * as path from "path";
+import { Response } from "express";
+import * as fs from "fs";
 
 @Injectable()
 export class StudentService {
@@ -26,7 +27,6 @@ export class StudentService {
     private readonly eventRepo: Repository<Event>,
     @InjectRepository(Group)
     private readonly groupRepo: Repository<Group>,
-    private readonly lidService: LidService,
     private readonly fileService: FileService
   ) {}
   async create(createStudentDto: CreateStudentDto) {
@@ -71,7 +71,9 @@ export class StudentService {
   }
 
   async findAll() {
-    const students = await this.studentRepo.find();
+    const students = await this.studentRepo.find({
+      relations: ["events", "groups"],
+    });
     if (students.length == 0)
       throw new BadRequestException("Students not found");
     return {
@@ -87,6 +89,7 @@ export class StudentService {
       );
     const student = await this.studentRepo.findOne({
       where: { id },
+      relations: ["events", "groups"],
     });
     if (!student) {
       throw new BadRequestException(`student with ${id}-id not fount`);
@@ -158,51 +161,19 @@ export class StudentService {
     await this.studentRepo.update(id, { refersh_token_hash: hash });
   }
 
-  // async uploadAvatar(studentId: number, file: any) {
-  //   try {
-  //     const { student } = await this.findOne(studentId);
-
-  //     const fileName = await this.fileService.saveFile(file);
-
-  //     student.avatar_url = fileName;
-  //     const updated = await this.studentRepo.save(student);
-
-  //     return {
-  //       message: "Avatar muvaffaqiyatli yuklandi",
-  //       data: updated,
-  //     };
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw new InternalServerErrorException(
-  //       "Avatar yuklashda xatolik yuz berdi"
-  //     );
-  //   }
-  // }
-
   async uploadAvatar(studentId: number, file: Express.Multer.File) {
     try {
-      const allowedExtensions = [
-        ".jpg",
-        ".jpeg",
-        ".png",
-        ".webp",
-        ".gif",
-        ".svg",
-        ".mp4",
-        ".mov",
-        ".mkv",
-        ".webm",
-      ];
-
-      const ext = path.extname(file.originalname).toLowerCase();
-
-      if (!allowedExtensions.includes(ext)) {
-        throw new BadRequestException(`Fayl turi ruxsat etilmagan: ${ext}`);
-      }
-
       const { student } = await this.findOne(studentId);
 
-      const fileName = await this.fileService.saveFile(file);
+      const file_path = path.resolve(
+        __dirname,
+        "..",
+        "..",
+        "static",
+        "student"
+      );
+
+      const fileName = await this.fileService.saveFile(file, file_path);
 
       student.avatar_url = fileName;
       const updated = await this.studentRepo.save(student);
@@ -217,5 +188,27 @@ export class StudentService {
         "Avatar yuklashda xatolik yuz berdi"
       );
     }
+  }
+
+  async viewAvatar(id: number, res: Response) {
+    const { student } = await this.findOne(id);
+    if (!student || !student.avatar_url) {
+      return res.status(404).json({ message: "Avatar topilmadi" });
+    }
+
+    const avatarPath = path.join(
+      __dirname,
+      "..",
+      "..",
+      "static",
+      "student",
+      student.avatar_url
+    );
+
+    if (!fs.existsSync(avatarPath)) {
+      return res.status(404).json({ message: "Fayl mavjud emas" });
+    }
+
+    res.sendFile(avatarPath);
   }
 }

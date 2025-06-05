@@ -14,7 +14,7 @@ export class AuthGuard implements CanActivate {
     const req: Request = context.switchToHttp().getRequest();
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || authHeader?.startsWith("Bearer ")) {
+    if (!authHeader || !authHeader?.startsWith("Bearer ")) {
       throw new UnauthorizedException("Token not found");
     }
     const token = authHeader.split(" ")[1];
@@ -39,13 +39,13 @@ export class AuthGuard implements CanActivate {
 
   private getSecretByRole(role: string): string {
     switch (role) {
-      case "ADMIN":
+      case "admin":
         return process.env.ADMIN_ACCESS_TOKEN_KEY!;
-      case "LID":
+      case "lid":
         return process.env.LID_ACCESS_TOKEN_KEY!;
-      case "TEACHER":
+      case "teacher":
         return process.env.TEACHER_ACCESS_TOKEN_KEY!;
-      case "STUDENT":
+      case "student":
         return process.env.STUDENT_ACCESS_TOKEN_KEY!;
       default:
         throw new UnauthorizedException("Role yaroqsiz");

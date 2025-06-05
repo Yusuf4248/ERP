@@ -12,7 +12,6 @@ import {
   IsOptional,
   IsArray,
 } from "class-validator";
-import { Lid } from "../../lid/entities/lid.entity";
 import { Group } from "../../group/entities/group.entity";
 
 @InputType()

@@ -21,7 +21,7 @@ export class LidAuthService {
     const payload = {
       id: lid.id,
       email: lid.email,
-      role: "LID",
+      role: "lid",
     };
 
     const [accessToken, refreshToken] = await Promise.all([

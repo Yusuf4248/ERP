@@ -11,6 +11,7 @@ import { Payment } from "../payments/entities/payment.entity";
 import { Exam } from "../exams/entities/exam.entity";
 import { Teacher } from "../teacher/entities/teacher.entity";
 import { Student } from "../student/entities/student.entities";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { Student } from "../student/entities/student.entities";
       Student,
     ]),
     CoursesModule,
+    JwtModule,
   ],
   controllers: [GroupController],
   providers: [GroupService],

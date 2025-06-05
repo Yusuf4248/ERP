@@ -8,6 +8,8 @@ import {
   Max,
   IsPositive,
   IsInt,
+  IsOptional,
+  IsArray,
 } from "class-validator";
 import { Type } from "class-transformer";
 
@@ -72,5 +74,7 @@ export class CreateEventDto {
   branchId: number;
 
   @Field(() => [Int])
-  studentsId: number[];
+  @IsOptional()
+  @IsArray()
+  studentsId?: number[];
 }

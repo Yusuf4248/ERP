@@ -6,9 +6,14 @@ import { Admin } from "./entities/admin.entity";
 import { AdminResolver } from "./admin.resolver";
 import { Branch } from "../branches/entities/branch.entity";
 import { BranchesModule } from "../branches/branches.module";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Admin, Branch]), BranchesModule],
+  imports: [
+    TypeOrmModule.forFeature([Admin, Branch]),
+    BranchesModule,
+    JwtModule,
+  ],
   controllers: [AdminController],
   providers: [AdminResolver, AdminService],
   exports: [AdminService],

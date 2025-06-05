@@ -47,7 +47,17 @@ async function start() {
       .setVersion("6.9")
       .addTag("NESTJS", "Validation, SWAGGER, BOT, TOEKNS, SENDMAIL")
       .addTag("Nest js", "GUARD, AUTH")
-      .addBearerAuth()
+      .addBearerAuth(
+        {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+          name: "Authorization",
+          description: "Foydalanuvchi JWT tokenini kiriting",
+          in: "header",
+        },
+        "JWT-auth"
+      )
       .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup("api/docs", app, document);

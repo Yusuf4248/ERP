@@ -6,16 +6,29 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { BranchesService } from "./branches.service";
 import { CreateBranchDto } from "./dto/create-branch.dto";
 import { UpdateBranchDto } from "./dto/update-branch.dto";
-import { ApiOperation, ApiResponse, ApiBody, ApiParam } from "@nestjs/swagger";
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiParam,
+  ApiBearerAuth,
+} from "@nestjs/swagger";
+import { Roles } from "../app.constants";
+import { AuthGuard } from "../common/guards/auth.guard";
+import { RolesGuard } from "../common/guards/role.guard";
 
 @Controller("branches")
+@ApiBearerAuth()
 export class BranchesController {
   constructor(private readonly branchesService: BranchesService) {}
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin")
   @Post()
   @ApiOperation({ summary: "Yangi filial yaratish" })
   @ApiBody({ type: CreateBranchDto })
@@ -39,6 +52,8 @@ export class BranchesController {
     return this.branchesService.findOne(+id);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin")
   @Patch(":id")
   @ApiOperation({ summary: "Filialni yangilash" })
   @ApiParam({ name: "id", type: Number, example: 1 })
@@ -48,6 +63,8 @@ export class BranchesController {
     return this.branchesService.update(+id, updateBranchDto);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin")
   @Delete(":id")
   @ApiOperation({ summary: "Filialni o'chirish" })
   @ApiParam({ name: "id", type: Number, example: 1 })

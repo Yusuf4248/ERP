@@ -6,18 +6,30 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from "@nestjs/swagger";
 import { GroupService } from "./group.service";
 import { CreateGroupDto } from "./dto/create-group.dto";
 import { UpdateGroupDto } from "./dto/update-group.dto";
 import { Group } from "./entities/group.entity";
+import { Roles } from "../app.constants";
+import { AuthGuard } from "../common/guards/auth.guard";
+import { RolesGuard } from "../common/guards/role.guard";
 
 @ApiTags("Groups")
+@ApiBearerAuth()
 @Controller("group")
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin")
   @Post()
   @ApiOperation({ summary: "Yangi group yaratish" })
   @ApiResponse({ status: 201, description: "Group yaratildi", type: Group })
@@ -25,6 +37,8 @@ export class GroupController {
     return this.groupService.create(createGroupDto);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin")
   @Get()
   @ApiOperation({ summary: "Barcha grouplarni olish" })
   @ApiResponse({ status: 200, description: "Grouplar ro'yxati", type: [Group] })
@@ -32,6 +46,8 @@ export class GroupController {
     return this.groupService.findAll();
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin")
   @Get(":id")
   @ApiOperation({ summary: "ID bo'yicha group olish" })
   @ApiResponse({ status: 200, description: "Group topildi", type: Group })
@@ -39,6 +55,8 @@ export class GroupController {
     return this.groupService.findOne(+id);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin")
   @Patch(":id")
   @ApiOperation({ summary: "Groupni tahrirlash" })
   @ApiResponse({ status: 200, description: "Group yangilandi", type: Group })
@@ -46,6 +64,8 @@ export class GroupController {
     return this.groupService.update(+id, updateGroupDto);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin")
   @Delete(":id")
   @ApiOperation({ summary: "Groupni o'chirish" })
   @ApiResponse({ status: 200, description: "Group o'chirildi" })

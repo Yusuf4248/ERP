@@ -22,11 +22,14 @@ export class ExamsService {
     private readonly teacherRepo: Repository<Teacher>
   ) {}
   async create(createExamDto: CreateExamDto) {
+    let teacher: Teacher[] = [];
     const { group } = await this.groupService.findOne(createExamDto.groupId);
     const { room } = await this.roomService.findOne(createExamDto.roomId);
-    const teacher = await this.teacherRepo.find({
-      where: { id: In(createExamDto.teacherId) },
-    });
+    if (createExamDto.teacherId) {
+      teacher = await this.teacherRepo.find({
+        where: { id: In(createExamDto.teacherId) },
+      });
+    }
     const newExam = await this.examRepo.save({
       ...createExamDto,
       group,

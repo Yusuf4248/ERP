@@ -11,6 +11,7 @@ import { Repository } from "typeorm";
 import * as bcrypt from "bcrypt";
 import { ChangePasswordDto } from "../student/dto/change-password.dto";
 import { BranchesService } from "../branches/branches.service";
+import { UpdateAdminStatusDto } from "./dto/update-admin-status.dto";
 
 @Injectable()
 export class AdminService {
@@ -122,5 +123,25 @@ export class AdminService {
 
   async updateTokenHash(id: number, hash: string) {
     await this.adminRepo.update(id, { refersh_token_hash: hash });
+  }
+
+  async updateStatus(id: number, dto: UpdateAdminStatusDto) {
+    const old_data = await this.findOne(id);
+
+    if (!("is_creator" in dto) && !("is_active" in dto)) {
+      throw new BadRequestException(
+        "Hech qanday o'zgaruvchan maydon yuborilmadi (is_creator yoki is_active)"
+      );
+    }
+
+    await this.adminRepo.update({ id }, dto);
+
+    const new_data = await this.findOne(id);
+
+    return {
+      message: "Admin holati muvaffaqiyatli yangilandi",
+      old_data,
+      new_data,
+    };
   }
 }

@@ -6,6 +6,7 @@ import {
   OneToOne,
   JoinColumn,
   ManyToMany,
+  JoinTable,
 } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
@@ -111,7 +112,9 @@ export class Student {
   @OneToMany(() => Attendance, (attendance) => attendance.student)
   attendance: Attendance[];
 
+  @Field({ nullable: true })
   @ManyToMany(() => Group, (group) => group.students, { nullable: true })
+  @JoinTable()
   groups: Group[];
 
   @OneToMany(
@@ -130,6 +133,7 @@ export class Student {
 
   @Field(() => [Event])
   @ManyToMany(() => Event, (event) => event.students, { nullable: true })
+  @JoinTable()
   events: Event[];
 
   @Field(() => [Payment])

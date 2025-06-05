@@ -1,20 +1,40 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from "@nestjs/common";
 import * as fs from "fs";
 import * as path from "path";
 import * as uuid from "uuid";
 
 @Injectable()
 export class FileService {
-  async saveFile(file: any): Promise<string> {
+  async saveFile(file: any, file_path: string): Promise<string> {
     try {
+      const allowedExtensions = [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".webp",
+        ".gif",
+        ".svg",
+        ".mp4",
+        ".mov",
+        ".mkv",
+        ".webm",
+      ];
+
+      const ext = path.extname(file.originalname).toLowerCase();
+
+      if (!allowedExtensions.includes(ext)) {
+        throw new BadRequestException(`Fayl turi ruxsat etilmagan: ${ext}`);
+      }
       const extension = path.extname(file.originalname);
       const fileName = uuid.v4() + extension;
-      //   const fileName = uuid.v4() + ".jpg";
-      const filePath = path.resolve(__dirname, "..", "..", "static");
-      if (!fs.existsSync(filePath)) {
-        fs.mkdirSync(filePath, { recursive: true });
+      if (!fs.existsSync(file_path)) {
+        fs.mkdirSync(file_path, { recursive: true });
       }
-      fs.writeFileSync(path.join(filePath, fileName), file.buffer);
+      fs.writeFileSync(path.join(file_path, fileName), file.buffer);
       return fileName;
     } catch (error) {
       console.log(error);

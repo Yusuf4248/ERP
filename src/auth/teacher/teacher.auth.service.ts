@@ -21,7 +21,7 @@ export class TeacherAuthService {
     const payload = {
       id: teacher.id,
       email: teacher.email,
-      role: "TEACHER",
+      role: "teacher",
     };
 
     const [accessToken, refreshToken] = await Promise.all([

@@ -8,12 +8,14 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { GroupModule } from "../group/group.module";
 import { TeacherModule } from "../teacher/teacher.module";
 import { HomeworkSubmission } from "../homework-submission/entities/homework-submission.entity";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Homework, Group, Teacher, HomeworkSubmission]),
     GroupModule,
     TeacherModule,
+    JwtModule,
   ],
   controllers: [HomeworksController],
   providers: [HomeworksService],

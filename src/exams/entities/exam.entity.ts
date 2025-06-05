@@ -73,7 +73,7 @@ export class Exam {
   @ManyToOne(() => Group, (group) => group.exams)
   group: Group;
 
-  @ManyToMany(() => Teacher, (teacher) => teacher.exam)
+  @ManyToMany(() => Teacher, (teacher) => teacher.exam, { nullable: true })
   @JoinTable()
   teacher: Teacher[];
 

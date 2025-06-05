@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from "@nestjs/common";
 import { CreateTeacherDto } from "./dto/create-teacher.dto";
@@ -9,10 +10,14 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Teacher } from "./entities/teacher.entity";
 import { In, Repository } from "typeorm";
 import * as bcrypt from "bcrypt";
+import * as path from "path";
+import * as fs from "fs";
 import { ChangePasswordDto } from "../student/dto/change-password.dto";
 import { Exam } from "../exams/entities/exam.entity";
 import { Group } from "../group/entities/group.entity";
 import { Branch } from "../branches/entities/branch.entity";
+import { FileService } from "../file/file.service";
+import { Response } from "express";
 
 @Injectable()
 export class TeacherService {
@@ -24,19 +29,33 @@ export class TeacherService {
     @InjectRepository(Group)
     private readonly groupRepo: Repository<Group>,
     @InjectRepository(Group)
-    private readonly branchRepo: Repository<Branch>
+    private readonly branchRepo: Repository<Branch>,
+    private readonly fileService: FileService
   ) {}
   async create(createTeacherDto: CreateTeacherDto) {
+    const { examId, groupId, branchId } = createTeacherDto;
+    let exam: Exam[] = [];
+    let groups: Group[] = [];
+    let branches: Branch[] = [];
     const hashshed_password = await bcrypt.hash(createTeacherDto.password, 7);
-    const exam = await this.examRepo.find({
-      where: { id: In(createTeacherDto.examId) },
-    });
-    const groups = await this.groupRepo.find({
-      where: { id: In(createTeacherDto.groupId) },
-    });
-    const branches = await this.branchRepo.find({
-      where: { id: In(createTeacherDto.branchId) },
-    });
+
+    if (Array.isArray(examId) && examId.length > 0) {
+      exam = await this.examRepo.find({
+        where: { id: In(examId) },
+      });
+    }
+
+    if (Array.isArray(groupId) && groupId.length > 0) {
+      groups = await this.groupRepo.find({
+        where: { id: In(groupId) },
+      });
+    }
+
+    if (Array.isArray(branchId) && branchId.length > 0) {
+      branches = await this.branchRepo.find({
+        where: { id: In(branchId) },
+      });
+    }
     const newTeacher = await this.teacherRepo.save({
       ...createTeacherDto,
       password: hashshed_password,
@@ -85,11 +104,6 @@ export class TeacherService {
   }
 
   async update(id: number, updateTeacherDto: UpdateTeacherDto) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.teacherRepo.update({ id }, updateTeacherDto);
 
@@ -102,11 +116,6 @@ export class TeacherService {
   }
 
   async remove(id: number) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.teacherRepo.delete(id);
 
@@ -149,5 +158,55 @@ export class TeacherService {
 
   async updateTokenHash(id: number, hash: string) {
     await this.teacherRepo.update(id, { refersh_token_hash: hash });
+  }
+
+  async uploadAvatar(id: number, file: Express.Multer.File) {
+    try {
+      const teacher = this.findOne(id);
+
+      const file_path = path.resolve(
+        __dirname,
+        "..",
+        "..",
+        "static",
+        "teacher"
+      );
+      const fileName = await this.fileService.saveFile(file, file_path);
+
+      (await teacher).teacher.avatar_url = fileName;
+      const updated = await this.teacherRepo.save((await teacher).teacher);
+
+      return {
+        message: "Avatar muvaffaqiyatli yuklandi",
+        data: updated.avatar_url,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(
+        "Avatar yuklashda xatolik yuz berdi"
+      );
+    }
+  }
+
+  async viewAvatar(id: number, res: Response) {
+    const { teacher } = await this.findOne(id);
+    if (!teacher || !teacher.avatar_url) {
+      throw new BadRequestException("Avatar topilmadi");
+    }
+
+    const avatarPath = path.join(
+      __dirname,
+      "..",
+      "..",
+      "static",
+      "teacher",
+      teacher.avatar_url
+    );
+
+    if (!fs.existsSync(avatarPath)) {
+      throw new BadRequestException("Fayl mavjud emas");
+    }
+
+    res.sendFile(avatarPath);
   }
 }

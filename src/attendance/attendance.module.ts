@@ -8,12 +8,14 @@ import { Student } from "../student/entities/student.entities";
 import { Schedule } from "../schedules/entities/schedule.entity";
 import { StudentModule } from "../student/student.module";
 import { SchedulesModule } from "../schedules/schedules.module";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Attendance, Student, Schedule]),
     StudentModule,
     SchedulesModule,
+    JwtModule,
   ],
   controllers: [AttendanceController],
   providers: [AttendanceService, AttendanceResolver],

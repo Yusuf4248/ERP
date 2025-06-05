@@ -8,11 +8,13 @@ import { BranchesModule } from "../branches/branches.module";
 import { RoomResolver } from "./rooms.resolver";
 import { Schedule } from "../schedules/entities/schedule.entity";
 import { Exam } from "../exams/entities/exam.entity";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Room, Branch, Schedule, Exam]),
     BranchesModule,
+    JwtModule,
   ],
   controllers: [RoomsController],
   providers: [RoomsService, RoomResolver],

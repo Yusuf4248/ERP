@@ -2,6 +2,7 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import {
   Column,
   Entity,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -67,6 +68,7 @@ export class Event {
   branch: Branch;
 
   @Field(() => [Student])
-  @ManyToMany(() => Student, (student) => student.events)
+  @ManyToMany(() => Student, (student) => student.events, { nullable: true })
+  @JoinTable()
   students: Student[];
 }

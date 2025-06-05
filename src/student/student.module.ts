@@ -12,6 +12,7 @@ import { LidModule } from "../lid/lid.module";
 import { Payment } from "../payments/entities/payment.entity";
 import { Group } from "../group/entities/group.entity";
 import { FileModule } from "../file/file.module";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { FileModule } from "../file/file.module";
     ]),
     LidModule,
     FileModule,
+    JwtModule,
   ],
   controllers: [StudentController],
   providers: [StudentResolver, StudentService],

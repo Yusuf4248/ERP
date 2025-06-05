@@ -12,6 +12,7 @@ import {
   IsArray,
   ArrayNotEmpty,
   IsInt,
+  IsOptional,
 } from "class-validator";
 
 @InputType()
@@ -71,7 +72,8 @@ export class CreateTeacherDto {
   @ArrayNotEmpty()
   @IsInt({ each: true })
   @Field(() => [Int])
-  examId: number[];
+  @IsOptional()
+  examId?: number[];
 
   @ApiProperty({
     example: [3, 4],
@@ -83,7 +85,8 @@ export class CreateTeacherDto {
   @ArrayNotEmpty()
   @IsInt({ each: true })
   @Field(() => [Int])
-  groupId: number[];
+  @IsOptional()
+  groupId?: number[];
 
   @ApiProperty({
     example: [5],
@@ -95,5 +98,6 @@ export class CreateTeacherDto {
   @ArrayNotEmpty()
   @IsInt({ each: true })
   @Field(() => [Int])
-  branchId: number[];
+  @IsOptional()
+  branchId?: number[];
 }

@@ -21,7 +21,7 @@ export class AdminAuthService {
     const payload = {
       id: admin.id,
       email: admin.email,
-      role: "ADMIN",
+      role: "admin",
       is_creator: admin.is_creator,
     };
 

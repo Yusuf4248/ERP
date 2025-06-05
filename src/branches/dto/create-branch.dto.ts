@@ -1,6 +1,12 @@
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsPhoneNumber, IsString } from "class-validator";
+import {
+  IsArray,
+  IsNotEmpty,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+} from "class-validator";
 
 @InputType()
 export class CreateBranchDto {
@@ -22,6 +28,8 @@ export class CreateBranchDto {
   @Field()
   call_number: string;
 
-  @Field()
-  teachersId: number[];
+  @Field({ nullable: true })
+  @IsArray()
+  @IsOptional()
+  teachersId?: number[];
 }

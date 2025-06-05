@@ -17,9 +17,13 @@ export class BranchesService {
     @InjectRepository(Branch) private readonly teacherRepo: Repository<Teacher>
   ) {}
   async create(createBranchDto: CreateBranchDto) {
-    const teachers = await this.teacherRepo.find({
-      where: { id: In(createBranchDto.teachersId) },
-    });
+    let teachers: Teacher[] = [];
+    if (createBranchDto.teachersId) {
+      teachers = await this.teacherRepo.find({
+        where: { id: In(createBranchDto.teachersId) },
+      });
+    }
+
     const newBranch = await this.branchRepo.save({
       ...createBranchDto,
       teachers,
@@ -33,7 +37,9 @@ export class BranchesService {
   }
 
   async findAll() {
-    const branch = await this.branchRepo.find({ relations: ["teachers"] });
+    const branch = await this.branchRepo.find({
+      relations: ["teachers"],
+    });
     if (branch.length == 0) {
       throw new NotFoundException("Branch not found");
     }
@@ -65,11 +71,6 @@ export class BranchesService {
   }
 
   async update(id: number, updateBranchDto: UpdateBranchDto) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.branchRepo.update({ id }, updateBranchDto);
 
@@ -82,11 +83,6 @@ export class BranchesService {
   }
 
   async remove(id: number) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.branchRepo.delete(id);
     return {

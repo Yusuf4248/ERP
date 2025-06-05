@@ -6,6 +6,8 @@ import {
   IsNotEmpty,
   IsString,
   IsNumber,
+  IsOptional,
+  IsArray,
 } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { ExamStatus } from "../entities/exam.entity";
@@ -54,6 +56,8 @@ export class CreateExamDto {
   @IsNumber()
   groupId: number;
 
-  @Field()
-  teacherId: number[];
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsArray()
+  teacherId?: number[];
 }

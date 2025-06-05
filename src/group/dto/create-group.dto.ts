@@ -4,9 +4,12 @@ import {
   IsDateString,
   IsInt,
   IsString,
+  IsOptional,
+  IsArray,
 } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { GroupStatus } from "../entities/group.entity";
+import { Field } from "@nestjs/graphql";
 
 export class CreateGroupDto {
   @ApiProperty({ example: "Frontend N1" })
@@ -33,7 +36,13 @@ export class CreateGroupDto {
   @IsEnum(GroupStatus)
   status: GroupStatus;
 
-  teacherId: number[];
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsArray()
+  teacherId?: number[];
 
-  studentsId: number[];
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsArray()
+  studentsId?: number[];
 }
