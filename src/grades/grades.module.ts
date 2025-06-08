@@ -9,6 +9,7 @@ import { HomeworkSubmission } from "../homework-submission/entities/homework-sub
 import { TeacherModule } from "../teacher/teacher.module";
 import { StudentModule } from "../student/student.module";
 import { HomeworkSubmissionModule } from "../homework-submission/homework-submission.module";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { HomeworkSubmissionModule } from "../homework-submission/homework-submis
     TeacherModule,
     StudentModule,
     HomeworkSubmissionModule,
+    JwtModule,
   ],
   controllers: [GradesController],
   providers: [GradesService],

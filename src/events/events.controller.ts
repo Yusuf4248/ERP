@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { EventsService } from "./events.service";
 import { CreateEventDto } from "./dto/create-event.dto";
@@ -17,14 +18,21 @@ import {
   ApiResponse,
   ApiBody,
   ApiParam,
+  ApiBearerAuth,
 } from "@nestjs/swagger";
 import { FilterEventDto } from "./dto/filter-event.dto";
+import { AuthGuard } from "../common/guards/auth.guard";
+import { RolesGuard } from "../common/guards/role.guard";
+import { Roles } from "../app.constants";
 
 @ApiTags("Events")
+@ApiBearerAuth()
 @Controller("events")
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin")
   @Post()
   @ApiOperation({ summary: "Yangi tadbir yaratish" })
   @ApiBody({ type: CreateEventDto })
@@ -33,6 +41,8 @@ export class EventsController {
     return this.eventsService.create(createEventDto);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin", "student", "teacher")
   @Get()
   @ApiOperation({ summary: "Barcha tadbirlarni olish" })
   @ApiResponse({
@@ -44,6 +54,8 @@ export class EventsController {
     return this.eventsService.findAll();
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin", "student", "teacher")
   @Get(":id")
   @ApiOperation({ summary: "ID bo'yicha tadbirni olish" })
   @ApiParam({ name: "id", description: "Tadbirning ID raqami", example: 1 })
@@ -52,6 +64,8 @@ export class EventsController {
     return this.eventsService.findOne(+id);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin")
   @Patch(":id")
   @ApiOperation({ summary: "Tadbirni yangilash" })
   @ApiParam({ name: "id", description: "Tadbirning ID raqami", example: 1 })
@@ -61,6 +75,8 @@ export class EventsController {
     return this.eventsService.update(+id, updateEventDto);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin")
   @Delete(":id")
   @ApiOperation({ summary: "Tadbirni o'chirish" })
   @ApiParam({ name: "id", description: "Tadbirning ID raqami", example: 1 })
@@ -69,6 +85,8 @@ export class EventsController {
     return this.eventsService.remove(+id);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin", "student", "teacher")
   @Post("filter-by-date")
   @ApiOperation({ summary: "Vaqt oralig'i bo'yicha filter" })
   @ApiBody({ type: FilterEventDto })
@@ -81,6 +99,8 @@ export class EventsController {
     return this.eventsService.findByDateRange(dto);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("superadmin", "admin", "student", "teacher")
   @Post("filter-by-status")
   @ApiOperation({ summary: "Status bo'yicha filter" })
   @ApiBody({ type: FilterEventDto })

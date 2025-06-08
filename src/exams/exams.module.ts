@@ -8,12 +8,14 @@ import { Room } from "../rooms/entities/room.entity";
 import { RoomsModule } from "../rooms/rooms.module";
 import { GroupModule } from "../group/group.module";
 import { Teacher } from "../teacher/entities/teacher.entity";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Exam, Group, Room, Teacher]),
     RoomsModule,
     GroupModule,
+    JwtModule,
   ],
   controllers: [ExamsController],
   providers: [ExamsService],

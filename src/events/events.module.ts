@@ -7,9 +7,14 @@ import { Branch } from "../branches/entities/branch.entity";
 import { BranchesModule } from "../branches/branches.module";
 import { EventsResolver } from "./events.resolver";
 import { Student } from "../student/entities/student.entities";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Event, Branch, Student]), BranchesModule],
+  imports: [
+    TypeOrmModule.forFeature([Event, Branch, Student]),
+    BranchesModule,
+    JwtModule,
+  ],
   controllers: [EventsController],
   providers: [EventsService, EventsResolver],
   exports: [EventsService],

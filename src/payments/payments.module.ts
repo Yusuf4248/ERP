@@ -9,6 +9,7 @@ import { PaymentTypesModule } from "../payment-types/payment-types.module";
 import { GroupModule } from "../group/group.module";
 import { Student } from "../student/entities/student.entities";
 import { StudentModule } from "../student/student.module";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { StudentModule } from "../student/student.module";
     PaymentTypesModule,
     GroupModule,
     StudentModule,
+    JwtModule,
   ],
   controllers: [PaymentsController],
   providers: [PaymentsService],
