@@ -50,11 +50,9 @@ async function start() {
       .addBearerAuth(
         {
           type: "http",
-          scheme: "bearer",
+          scheme: "Bearer",
           bearerFormat: "JWT",
-          name: "Authorization",
           description: "Foydalanuvchi JWT tokenini kiriting",
-          in: "header",
         },
         "JWT-auth"
       )

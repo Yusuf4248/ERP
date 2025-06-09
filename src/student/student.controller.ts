@@ -35,7 +35,7 @@ import { Roles } from "../app.constants";
 import { Response } from "express";
 
 @ApiTags("Students")
-@ApiBearerAuth()
+@ApiBearerAuth("JWT-auth")
 @Controller("student")
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}

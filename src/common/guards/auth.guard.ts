@@ -13,7 +13,6 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req: Request = context.switchToHttp().getRequest();
     const authHeader = req.headers.authorization;
-
     if (!authHeader || !authHeader?.startsWith("Bearer ")) {
       throw new UnauthorizedException("Token not found");
     }
