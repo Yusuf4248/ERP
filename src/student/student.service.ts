@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -7,16 +8,17 @@ import {
 import { CreateStudentDto } from "./dto/create-student.dto";
 import { UpdateStudentDto } from "./dto/update-student.dto";
 import { Student } from "./entities/student.entities";
-import * as bcrypt from "bcrypt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { In, Repository } from "typeorm";
 import { ChangePasswordDto } from "./dto/change-password.dto";
 import { Event } from "../events/entities/event.entity";
 import { FileService } from "../file/file.service";
 import { Group } from "../group/entities/group.entity";
-import * as path from "path";
 import { Response } from "express";
+import { Homework } from "../homeworks/entities/homework.entity";
+import * as path from "path";
 import * as fs from "fs";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class StudentService {
@@ -27,6 +29,8 @@ export class StudentService {
     private readonly eventRepo: Repository<Event>,
     @InjectRepository(Group)
     private readonly groupRepo: Repository<Group>,
+    @InjectRepository(Homework)
+    private readonly homeworkRepo: Repository<Homework>,
     private readonly fileService: FileService
   ) {}
   async create(createStudentDto: CreateStudentDto) {
@@ -210,5 +214,36 @@ export class StudentService {
     }
 
     res.sendFile(avatarPath);
+  }
+
+  async getAllStudentHomeworksByGroup(studentId: number, groupId: number) {
+    if (!Number.isInteger(Number(groupId)) || Number(groupId) <= 0)
+      throw new BadRequestException(
+        "ID must be integer and must be greater than zero"
+      );
+    const group = await this.groupRepo.findOne({
+      where: { id: groupId },
+      relations: ["students"],
+    });
+    if (!group) {
+      throw new NotFoundException(`${groupId}-group not found`);
+    }
+    const isStudentExist = group.students.some(
+      (student) => student.id == studentId
+    );
+
+    if (!isStudentExist) {
+      throw new ForbiddenException(
+        `${studentId}-student not found in this group`
+      );
+    }
+
+    const homeworks = await this.homeworkRepo.find();
+
+    if (homeworks.length == 0) {
+      throw new NotFoundException("Homework not found");
+    }
+
+    return homeworks;
   }
 }

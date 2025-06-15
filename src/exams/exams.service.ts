@@ -44,7 +44,9 @@ export class ExamsService {
   }
 
   async findAll() {
-    const exams = await this.examRepo.find({ relations: ["group", "room"] });
+    const exams = await this.examRepo.find({
+      relations: ["group", "room", "teacher"],
+    });
     if (exams.length == 0) {
       throw new NotFoundException("Exams not found");
     }
@@ -62,7 +64,7 @@ export class ExamsService {
       );
     const exam = await this.examRepo.findOne({
       where: { id },
-      relations: ["group", "room"],
+      relations: ["group", "room", "teacher"],
     });
     if (!exam) {
       throw new NotFoundException(`${id}-exam not found`);

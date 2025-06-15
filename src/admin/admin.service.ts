@@ -8,10 +8,10 @@ import { UpdateAdminDto } from "./dto/update-admin.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Admin } from "./entities/admin.entity";
 import { Repository } from "typeorm";
-import * as bcrypt from "bcrypt";
 import { ChangePasswordDto } from "../student/dto/change-password.dto";
 import { BranchesService } from "../branches/branches.service";
 import { UpdateAdminStatusDto } from "./dto/update-admin-status.dto";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AdminService {

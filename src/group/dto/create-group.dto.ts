@@ -40,9 +40,4 @@ export class CreateGroupDto {
   @IsOptional()
   @IsArray()
   teacherId?: number[];
-
-  @Field({ nullable: true })
-  @IsOptional()
-  @IsArray()
-  studentsId?: number[];
 }

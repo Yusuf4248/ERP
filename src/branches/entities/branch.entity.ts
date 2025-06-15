@@ -49,6 +49,6 @@ export class Branch {
   @OneToMany(() => Event, (event) => event.branch)
   events: Event[];
 
-  @ManyToMany(() => Teacher, (teacher) => teacher.branches)
+  @ManyToMany(() => Teacher, (teacher) => teacher.branches, { nullable: true })
   teachers: Teacher[];
 }

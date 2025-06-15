@@ -94,7 +94,6 @@ export class Teacher {
   grades: Grade[];
 
   @Field({ nullable: true })
-  @JoinTable()
   @ManyToMany(() => Exam, (exam) => exam.teacher, { nullable: true })
   exam: Exam[];
 

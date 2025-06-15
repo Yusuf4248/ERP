@@ -29,7 +29,7 @@ import { Roles } from "../app.constants";
 import { JwtSelfGuard } from "../common/guards/jwt-self.guard";
 
 @Controller("lid")
-@ApiBearerAuth()
+@ApiBearerAuth("JWT-auth")
 export class LidController {
   constructor(private readonly lidService: LidService) {}
 
@@ -113,16 +113,16 @@ export class LidController {
     return this.lidService.findByStatus(body.status);
   }
 
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles("superadmin", "admin", "lid")
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @Roles("superadmin", "admin", "lid")
   @HttpCode(HttpStatus.OK)
   @Post("new_otp")
   async newOtp(@Body() body: LidEmailDto) {
     return this.lidService.generateNewOtp(body.email);
   }
 
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles("superadmin", "admin", "lid")
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @Roles("superadmin", "admin", "lid")
   @HttpCode(200)
   @Post("verifyOtp/:id")
   verifyOtp(@Body() verifyOtpDto: VerifyOtpDto, @Param("id") otp_id: string) {

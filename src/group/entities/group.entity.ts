@@ -14,7 +14,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Course } from "../../courses/entities/course.entity";
 import { Schedule } from "../../schedules/entities/schedule.entity";
 import { Homework } from "../../homeworks/entities/homework.entity";
-import { Lid } from "../../lid/entities/lid.entity";
 import { Payment } from "../../payments/entities/payment.entity";
 import { Exam } from "../../exams/entities/exam.entity";
 import { Teacher } from "../../teacher/entities/teacher.entity";
@@ -98,7 +97,7 @@ export class Group {
   schedules: Schedule[];
 
   @Field(() => [Student], { nullable: true })
-  @OneToMany(() => Student, (student) => student.groups)
+  @ManyToMany(() => Student, (student) => student.groups)
   students: Student[];
 
   @Field(() => [Homework], { nullable: true })

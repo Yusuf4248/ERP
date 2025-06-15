@@ -24,7 +24,7 @@ import { AuthGuard } from "../common/guards/auth.guard";
 import { RolesGuard } from "../common/guards/role.guard";
 
 @ApiTags("Courses")
-@ApiBearerAuth()
+@ApiBearerAuth("JWT-auth")
 @Controller("courses")
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}

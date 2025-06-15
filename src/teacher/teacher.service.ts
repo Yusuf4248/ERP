@@ -24,32 +24,14 @@ export class TeacherService {
   constructor(
     @InjectRepository(Teacher)
     private readonly teacherRepo: Repository<Teacher>,
-    @InjectRepository(Exam)
-    private readonly examRepo: Repository<Exam>,
-    @InjectRepository(Group)
-    private readonly groupRepo: Repository<Group>,
     @InjectRepository(Group)
     private readonly branchRepo: Repository<Branch>,
     private readonly fileService: FileService
   ) {}
   async create(createTeacherDto: CreateTeacherDto) {
-    const { examId, groupId, branchId } = createTeacherDto;
-    let exam: Exam[] = [];
-    let groups: Group[] = [];
+    const { branchId } = createTeacherDto;
     let branches: Branch[] = [];
     const hashshed_password = await bcrypt.hash(createTeacherDto.password, 7);
-
-    if (Array.isArray(examId) && examId.length > 0) {
-      exam = await this.examRepo.find({
-        where: { id: In(examId) },
-      });
-    }
-
-    if (Array.isArray(groupId) && groupId.length > 0) {
-      groups = await this.groupRepo.find({
-        where: { id: In(groupId) },
-      });
-    }
 
     if (Array.isArray(branchId) && branchId.length > 0) {
       branches = await this.branchRepo.find({
@@ -59,8 +41,6 @@ export class TeacherService {
     const newTeacher = await this.teacherRepo.save({
       ...createTeacherDto,
       password: hashshed_password,
-      exam,
-      groups,
       branches,
     });
     return {

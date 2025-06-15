@@ -13,20 +13,11 @@ import { Teacher } from "../teacher/entities/teacher.entity";
 @Injectable()
 export class BranchesService {
   constructor(
-    @InjectRepository(Branch) private readonly branchRepo: Repository<Branch>,
-    @InjectRepository(Branch) private readonly teacherRepo: Repository<Teacher>
+    @InjectRepository(Branch) private readonly branchRepo: Repository<Branch>
   ) {}
   async create(createBranchDto: CreateBranchDto) {
-    let teachers: Teacher[] = [];
-    if (createBranchDto.teachersId) {
-      teachers = await this.teacherRepo.find({
-        where: { id: In(createBranchDto.teachersId) },
-      });
-    }
-
     const newBranch = await this.branchRepo.save({
       ...createBranchDto,
-      teachers,
     });
 
     return {

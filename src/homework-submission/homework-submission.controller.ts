@@ -23,7 +23,7 @@ import { AuthGuard } from "../common/guards/auth.guard";
 import { RolesGuard } from "../common/guards/role.guard";
 
 @ApiTags("Homework Submission")
-@ApiBearerAuth()
+@ApiBearerAuth("JWT-auth")
 @Controller("homework-submission")
 export class HomeworkSubmissionController {
   constructor(

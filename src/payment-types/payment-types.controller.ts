@@ -23,7 +23,7 @@ import { AuthGuard } from "../common/guards/auth.guard";
 import { RolesGuard } from "../common/guards/role.guard";
 
 @ApiTags("Payment Types")
-@ApiBearerAuth()
+@ApiBearerAuth("JWT-auth")
 @Controller("payment-types")
 export class PaymentTypesController {
   constructor(private readonly paymentTypesService: PaymentTypesService) {}

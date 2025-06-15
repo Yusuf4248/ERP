@@ -133,7 +133,6 @@ export class Student {
 
   @Field(() => [Event])
   @ManyToMany(() => Event, (event) => event.students, { nullable: true })
-  @JoinTable()
   events: Event[];
 
   @Field(() => [Payment])

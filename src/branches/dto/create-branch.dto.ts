@@ -27,9 +27,4 @@ export class CreateBranchDto {
   @IsNotEmpty()
   @Field()
   call_number: string;
-
-  @Field({ nullable: true })
-  @IsArray()
-  @IsOptional()
-  teachersId?: number[];
 }

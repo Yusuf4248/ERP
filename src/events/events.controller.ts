@@ -26,7 +26,7 @@ import { RolesGuard } from "../common/guards/role.guard";
 import { Roles } from "../app.constants";
 
 @ApiTags("Events")
-@ApiBearerAuth()
+@ApiBearerAuth("JWT-auth")
 @Controller("events")
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}

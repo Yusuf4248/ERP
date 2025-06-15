@@ -29,7 +29,7 @@ import { Roles } from "../app.constants";
 import { JwtSelfGuard } from "../common/guards/jwt-self.guard";
 
 @ApiTags("Admin")
-@ApiBearerAuth()
+@ApiBearerAuth("JWT-auth")
 @Controller("admin")
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}

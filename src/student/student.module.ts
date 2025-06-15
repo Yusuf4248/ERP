@@ -13,6 +13,7 @@ import { Payment } from "../payments/entities/payment.entity";
 import { Group } from "../group/entities/group.entity";
 import { FileModule } from "../file/file.module";
 import { JwtModule } from "@nestjs/jwt";
+import { Homework } from "../homeworks/entities/homework.entity";
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { JwtModule } from "@nestjs/jwt";
       Payment,
       Event,
       Group,
+      Homework,
     ]),
     LidModule,
     FileModule,

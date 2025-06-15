@@ -16,23 +16,19 @@ import { Student } from "../student/entities/student.entities";
 export class GroupService {
   constructor(
     @InjectRepository(Group) private readonly groupRepo: Repository<Group>,
-    @InjectRepository(Student)
-    private readonly studentRepo: Repository<Student>,
     @InjectRepository(Teacher)
     private readonly teacherRepo: Repository<Teacher>,
+    @InjectRepository(Student)
+    private readonly studentrRepo: Repository<Student>,
     private readonly courseService: CoursesService
   ) {}
   async create(createGroupDto: CreateGroupDto) {
     let teachers: Teacher[] = [];
-    let students: Student[] = [];
-    const { course_id, teacherId, studentsId } = createGroupDto;
+    const { course_id, teacherId } = createGroupDto;
     const { course } = await this.courseService.findOne(+course_id);
-    if (teacherId && studentsId) {
+    if (teacherId) {
       teachers = await this.teacherRepo.find({
         where: { id: In(teacherId) },
-      });
-      students = await this.studentRepo.find({
-        where: { id: In(studentsId) },
       });
     }
 
@@ -40,7 +36,6 @@ export class GroupService {
       ...createGroupDto,
       course,
       teachers,
-      students,
     });
     return {
       message: "New group created successfully!",
@@ -50,7 +45,9 @@ export class GroupService {
   }
 
   async findAll() {
-    const groups = await this.groupRepo.find({});
+    const groups = await this.groupRepo.find({
+      relations: ["students", "teachers", "course"],
+    });
     if (groups.length == 0) {
       throw new NotFoundException("Groups not found");
     }
@@ -67,7 +64,7 @@ export class GroupService {
       );
     const group = await this.groupRepo.findOne({
       where: { id },
-      relations: ["course", "teachers"],
+      relations: ["course", "teachers", "students"],
     });
     if (!group) {
       throw new NotFoundException(`Group ID-${id} not found`);
@@ -106,5 +103,33 @@ export class GroupService {
       message: `Group id-${id} deleted`,
       success: true,
     };
+  }
+
+  async addStudentToGroup(group_id: number, student_id: number) {
+    const { group } = await this.findOne(group_id);
+    const student = await this.studentrRepo.findOne({
+      where: { id: student_id },
+    });
+    if (!student) {
+      throw new BadRequestException(`${student_id}-student not found!`);
+    }
+    const isAlreadyExists = group.students.find((s) => s.id === student.id);
+    if (isAlreadyExists) {
+      throw new BadRequestException(
+        "This student already exists in this group"
+      );
+    }
+    group.students.push(student);
+    return this.groupRepo.save(group);
+  }
+
+  async removeStudentFromGroup(group_id: number, student_id: number) {
+    const { group } = await this.findOne(group_id);
+    const studentIndex = group.students.findIndex((s) => s.id === student_id);
+    if (studentIndex === -1) {
+      throw new NotFoundException("Student is not in this group");
+    }
+    group.students.splice(studentIndex, 1);
+    return this.groupRepo.save(group);
   }
 }

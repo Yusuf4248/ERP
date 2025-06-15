@@ -63,32 +63,6 @@ export class CreateTeacherDto {
   role: "assistant teacher" | "main teacher";
 
   @ApiProperty({
-    example: [1, 2],
-    description: "IDs of exams the teacher is related to",
-    isArray: true,
-    type: Number,
-  })
-  @IsArray()
-  @ArrayNotEmpty()
-  @IsInt({ each: true })
-  @Field(() => [Int])
-  @IsOptional()
-  examId?: number[];
-
-  @ApiProperty({
-    example: [3, 4],
-    description: "IDs of groups the teacher is assigned to",
-    isArray: true,
-    type: Number,
-  })
-  @IsArray()
-  @ArrayNotEmpty()
-  @IsInt({ each: true })
-  @Field(() => [Int])
-  @IsOptional()
-  groupId?: number[];
-
-  @ApiProperty({
     example: [5],
     description: "IDs of branches the teacher works at",
     isArray: true,

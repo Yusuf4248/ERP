@@ -23,7 +23,7 @@ import { AuthGuard } from "../common/guards/auth.guard";
 import { RolesGuard } from "../common/guards/role.guard";
 
 @Controller("branches")
-@ApiBearerAuth()
+@ApiBearerAuth("JWT-auth")
 export class BranchesController {
   constructor(private readonly branchesService: BranchesService) {}
 

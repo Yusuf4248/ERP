@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  ParseIntPipe,
 } from "@nestjs/common";
 import {
   ApiTags,
@@ -23,7 +24,7 @@ import { AuthGuard } from "../common/guards/auth.guard";
 import { RolesGuard } from "../common/guards/role.guard";
 
 @ApiTags("Groups")
-@ApiBearerAuth()
+@ApiBearerAuth("JWT-auth")
 @Controller("group")
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
@@ -71,5 +72,25 @@ export class GroupController {
   @ApiResponse({ status: 200, description: "Group o'chirildi" })
   remove(@Param("id") id: string) {
     return this.groupService.remove(+id);
+  }
+
+  @Patch(":groupId/add-student/:studentId")
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("admin", "superadmin")
+  async addStudentToGroup(
+    @Param("groupId", ParseIntPipe) groupId: number,
+    @Param("studentId", ParseIntPipe) studentId: number
+  ) {
+    return this.groupService.addStudentToGroup(groupId, studentId);
+  }
+
+  @Patch(":groupId/remove-student/:studentId")
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("admin", "superadmin")
+  async removeStudentFromGroup(
+    @Param("groupId", ParseIntPipe) groupId: number,
+    @Param("studentId", ParseIntPipe) studentId: number
+  ) {
+    return this.groupService.removeStudentFromGroup(groupId, studentId);
   }
 }

@@ -22,7 +22,7 @@ import { AuthGuard } from "../common/guards/auth.guard";
 import { RolesGuard } from "../common/guards/role.guard";
 
 @ApiTags("Attendance")
-@ApiBearerAuth()
+@ApiBearerAuth("JWT-auth")
 @Controller("attendance")
 export class AttendanceController {
   constructor(private readonly attendanceService: AttendanceService) {}

@@ -23,7 +23,7 @@ import { RolesGuard } from "../common/guards/role.guard";
 import { Roles } from "../app.constants";
 
 @ApiTags("Grades")
-@ApiBearerAuth()
+@ApiBearerAuth("JWT-auth")
 @Controller("grades")
 export class GradesController {
   constructor(private readonly gradesService: GradesService) {}

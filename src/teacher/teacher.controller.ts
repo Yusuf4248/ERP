@@ -34,7 +34,7 @@ import { Response } from "express";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 @ApiTags("Teacher")
-@ApiBearerAuth()
+@ApiBearerAuth("JWT-auth")
 @Controller("teacher")
 export class TeacherController {
   constructor(private readonly teacherService: TeacherService) {}
