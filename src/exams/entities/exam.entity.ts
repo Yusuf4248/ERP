@@ -1,12 +1,14 @@
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Room } from "../../rooms/entities/room.entity";
@@ -80,4 +82,12 @@ export class Exam {
   @Field(() => [ExamResult])
   @OneToMany(() => ExamResult, (exam_result) => exam_result.exam)
   exam_result: ExamResult[];
+
+  @CreateDateColumn({ name: "created_at" })
+  @Field()
+  created_at: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  @Field()
+  updated_at: Date;
 }

@@ -14,8 +14,13 @@ export class GroupResolver {
   }
 
   @Query(() => [Group], { name: "getAllGroups" })
-  findAll() {
-    return this.groupService.findAll();
+  findAll(
+    @Args("page", { type: () => Int, nullable: true, defaultValue: 1 })
+    page: number,
+    @Args("limit", { type: () => Int, nullable: true, defaultValue: 10 })
+    limit: number
+  ) {
+    return this.groupService.findAll(page, limit);
   }
 
   @Query(() => Group, { name: "getGroupById" })

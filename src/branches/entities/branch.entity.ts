@@ -1,10 +1,12 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Room } from "../../rooms/entities/room.entity";
@@ -51,4 +53,12 @@ export class Branch {
 
   @ManyToMany(() => Teacher, (teacher) => teacher.branches, { nullable: true })
   teachers: Teacher[];
+
+  @CreateDateColumn({ name: "created_at" })
+  @Field()
+  created_at: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  @Field()
+  updated_at: Date;
 }

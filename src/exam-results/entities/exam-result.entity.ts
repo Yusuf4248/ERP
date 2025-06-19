@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Exam } from "../../exams/entities/exam.entity";
 import { Student } from "../../student/entities/student.entities";
 import { ApiProperty } from "@nestjs/swagger";
@@ -36,4 +36,12 @@ export class ExamResult {
   @Field(() => Student)
   @ManyToOne(() => Student, (student) => student.exam_result)
   student: Student;
+
+  @CreateDateColumn({ name: "created_at" })
+  @Field()
+  created_at: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  @Field()
+  updated_at: Date;
 }

@@ -2,10 +2,12 @@ import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Group } from "../../group/entities/group.entity";
 import { Student } from "../../student/entities/student.entities";
@@ -114,4 +116,12 @@ export class Lid {
   @Column({ default: "" })
   @Field()
   refresh_token_hash: string;
+
+  @CreateDateColumn({ name: "created_at" })
+  @Field()
+  created_at: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  @Field()
+  updated_at: Date;
 }

@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Branch } from "../../branches/entities/branch.entity";
@@ -67,4 +74,12 @@ export class Admin {
 
   @ManyToOne(() => Branch, (branch) => branch.admin)
   branch: Branch;
+
+  @CreateDateColumn({ name: "created_at" })
+  @Field()
+  created_at: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  @Field()
+  updated_at: Date;
 }

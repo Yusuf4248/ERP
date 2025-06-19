@@ -33,6 +33,7 @@ import { RolesGuard } from "../common/guards/role.guard";
 import { JwtSelfGuard } from "../common/guards/jwt-self.guard";
 import { Roles } from "../app.constants";
 import { Response } from "express";
+import { Homework } from "../homeworks/entities/homework.entity";
 
 @ApiTags("Students")
 @ApiBearerAuth("JWT-auth")
@@ -150,5 +151,38 @@ export class StudentController {
     @Res() res: Response
   ) {
     return this.studentService.viewAvatar(+id, res);
+  }
+
+  @Get(":studentId/group/:groupId")
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("student", "admin", "superadmin", "teacher")
+  @ApiOperation({
+    summary: "Talabaning guruhiga tegishli barcha vazifalarni olish",
+  })
+  @ApiParam({
+    name: "studentId",
+    type: Number,
+    example: 5,
+    description: "Student ID",
+  })
+  @ApiParam({
+    name: "groupId",
+    type: Number,
+    example: 3,
+    description: "Group ID",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Ushbu student uchun guruhdagi uyga vazifalar",
+    type: [Homework],
+  })
+  getAllStudentHomeworksByGroup(
+    @Param("studentId") studentId: number,
+    @Param("groupId") groupId: number
+  ) {
+    return this.studentService.getAllStudentHomeworksByGroup(
+      studentId,
+      groupId
+    );
   }
 }

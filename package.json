@@ -37,6 +37,7 @@
     "cookie-parser": "^1.4.7",
     "graphql": "^16.11.0",
     "handlebars": "^4.7.8",
+    "multer": "^2.0.1",
     "nest-winston": "^1.10.2",
     "nestjs-telegraf": "^2.9.1",
     "otp-generator": "^4.0.1",

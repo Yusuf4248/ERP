@@ -7,6 +7,9 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  ParseIntPipe,
+  UploadedFile,
 } from "@nestjs/common";
 import {
   ApiTags,
@@ -15,6 +18,7 @@ import {
   ApiBody,
   ApiParam,
   ApiBearerAuth,
+  ApiConsumes,
 } from "@nestjs/swagger";
 import { HomeworksService } from "./homeworks.service";
 import { CreateHomeworkDto } from "./dto/create-homework.dto";
@@ -23,6 +27,7 @@ import { Homework } from "./entities/homework.entity";
 import { Roles } from "../app.constants";
 import { AuthGuard } from "../common/guards/auth.guard";
 import { RolesGuard } from "../common/guards/role.guard";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @ApiTags("Homeworks")
 @ApiBearerAuth("JWT-auth")
@@ -42,6 +47,23 @@ export class HomeworksController {
   @ApiBody({ type: CreateHomeworkDto })
   create(@Body() createHomeworkDto: CreateHomeworkDto) {
     return this.homeworksService.create(createHomeworkDto);
+  }
+
+  @Post("upload/:id")
+  @UseInterceptors(FileInterceptor("file"))
+  @ApiOperation({ summary: "Uyga vazifaga media yuklash (fayl bilan)" })
+  @ApiConsumes("multipart/form-data")
+  @ApiParam({ name: "id", type: Number, description: "Homework ID" })
+  @ApiResponse({
+    status: 201,
+    description: "Media muvaffaqiyatli yuklandi",
+  })
+  async uploadMedia(
+    @Param("id", ParseIntPipe) id: number,
+    @UploadedFile() file: Express.Multer.File,
+    @Body("file_title") file_title: string
+  ) {
+    return this.homeworksService.uploadMedia(id, file, file_title);
   }
 
   @UseGuards(AuthGuard, RolesGuard)

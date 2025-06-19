@@ -1,10 +1,12 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Group } from "../../group/entities/group.entity";
 import { Attendance } from "../../attendance/entities/attendance.entity";
@@ -68,4 +70,12 @@ export class Schedule {
   })
   @ManyToOne(() => Room, (room) => room.schedules)
   room: Room;
+
+  @CreateDateColumn({ name: "created_at" })
+  @Field()
+  created_at: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  @Field()
+  updated_at: Date;
 }

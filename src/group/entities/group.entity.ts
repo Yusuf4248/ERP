@@ -22,10 +22,8 @@ import { Student } from "../../student/entities/student.entities";
 export enum GroupStatus {
   NEW = "new",
   ACTIVE = "active",
-  FULL = "full",
   COMPLETED = "completed",
   CANCELLED = "cancelled",
-  REACTIVATED = "reactivated",
   PENDING = "pending",
 }
 

@@ -10,14 +10,20 @@ import { Homework } from "./entities/homework.entity";
 import { Repository } from "typeorm";
 import { GroupService } from "../group/group.service";
 import { TeacherService } from "../teacher/teacher.service";
+import { Media } from "../media/entities/media.entity";
+import * as path from "path";
+import { FileService } from "../file/file.service";
 
 @Injectable()
 export class HomeworksService {
   constructor(
     @InjectRepository(Homework)
     private readonly homeworkRepo: Repository<Homework>,
+    @InjectRepository(Media)
+    private readonly mediaRepo: Repository<Media>,
     private readonly groupService: GroupService,
-    private readonly teacherService: TeacherService
+    private readonly teacherService: TeacherService,
+    private readonly fileService: FileService
   ) {}
   async create(createHomeworkDto: CreateHomeworkDto) {
     const group = await this.groupService.findOne(createHomeworkDto.groupId);
@@ -34,6 +40,22 @@ export class HomeworksService {
       success: true,
       newHomework,
     };
+  }
+
+  async uploadMedia(id: number, file: Express.Multer.File, file_title: string) {
+    const fileSizeInMb = (file.size / (1024 * 1024)).toFixed(2);
+    const fileType = file.mimetype;
+    const filePath = path.join(__dirname, "..", "..", "media", "homework");
+    const fileName = await this.fileService.saveFile(file, filePath);
+    const media = await this.mediaRepo.save({
+      files: fileName,
+      file_name: file_title,
+      table_id: id,
+      table_name: "homework",
+      type: fileType,
+      size: +fileSizeInMb,
+    });
+    return media;
   }
 
   async findAll() {

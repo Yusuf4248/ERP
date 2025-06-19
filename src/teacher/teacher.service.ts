@@ -105,7 +105,7 @@ export class TeacherService {
     };
   }
 
-  findByEmail(email: string) {
+  async findByEmail(email: string) {
     return this.teacherRepo.findOneBy({ email });
   }
 

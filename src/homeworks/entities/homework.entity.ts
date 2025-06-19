@@ -1,10 +1,12 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Teacher } from "../../teacher/entities/teacher.entity";
 import { Group } from "../../group/entities/group.entity";
@@ -50,9 +52,27 @@ export class Homework {
     () => HomeworkSubmission,
     (homework_submission) => homework_submission.homework
   )
+  @Field(() => [HomeworkSubmission], { nullable: true })
   @ApiProperty({
     type: () => [HomeworkSubmission],
     description: "Vazifaga topshirilgan javoblar ro'yxati",
   })
   homework_submission: HomeworkSubmission[];
+
+  
+  @CreateDateColumn({ name: "created_at" })
+  @Field()
+  @ApiProperty({
+    example: "2025-06-18T12:00:00.000Z",
+    description: "Yaratilgan sana",
+  })
+  created_at: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  @Field()
+  @ApiProperty({
+    example: "2025-06-19T12:00:00.000Z",
+    description: "Oxirgi yangilanish",
+  })
+  updated_at: Date;
 }

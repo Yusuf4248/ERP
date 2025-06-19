@@ -1,5 +1,11 @@
 import { ObjectType, Field, Float, Int } from "@nestjs/graphql";
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 
 @ObjectType()
@@ -52,4 +58,12 @@ export class Media {
   @Column({ type: "decimal" })
   @Field(() => Float)
   size: number;
+
+  @CreateDateColumn({ name: "created_at" })
+  @Field()
+  created_at: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  @Field()
+  updated_at: Date;
 }

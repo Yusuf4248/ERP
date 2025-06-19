@@ -1,10 +1,12 @@
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Homework } from "../../homeworks/entities/homework.entity";
 import { Student } from "../../student/entities/student.entities";
@@ -28,11 +30,11 @@ export class HomeworkSubmission {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field()
+  @Field(() => Homework)
   @ManyToOne(() => Homework, (homework) => homework.homework_submission)
   homework: Homework;
 
-  @Field()
+  @Field(() => Student)
   @ManyToOne(() => Student, (student) => student.homework_submission)
   student: Student;
 
@@ -53,6 +55,15 @@ export class HomeworkSubmission {
   })
   status: HomeworkStatus;
 
+  @Field(() => Grade)
   @OneToMany(() => Grade, (grades) => grades.homework_submission)
   grades: Grade[];
+
+  @CreateDateColumn({ name: "created_at" })
+  @Field()
+  created_at: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  @Field()
+  updated_at: Date;
 }

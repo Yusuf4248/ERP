@@ -1,5 +1,12 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { Student } from "../../student/entities/student.entities";
 import { HomeworkSubmission } from "../../homework-submission/entities/homework-submission.entity";
 import { Teacher } from "../../teacher/entities/teacher.entity";
@@ -37,4 +44,12 @@ export class Grade {
   @Field()
   @Column()
   comment: string;
+
+  @CreateDateColumn({ name: "created_at" })
+  @Field()
+  created_at: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  @Field()
+  updated_at: Date;
 }

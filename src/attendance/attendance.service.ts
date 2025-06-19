@@ -20,13 +20,13 @@ export class AttendanceService {
     private readonly scheduleService: SchedulesService
   ) {}
   async create(createAttendanceDto: CreateAttendanceDto) {
-    const { scheduleId, studentId, ...otherDto } = createAttendanceDto;
+    const { scheduleId, studentId } = createAttendanceDto;
     const { student } = await this.studentService.findOne(studentId);
     const { schedule } = await this.scheduleService.findOne(scheduleId);
     const attendance = this.attendanceRepo.create({
-      schedule: schedule,
-      student: student,
-      ...otherDto,
+      ...createAttendanceDto,
+      schedule,
+      student,
     });
     return this.attendanceRepo.save(attendance);
   }
@@ -65,10 +65,6 @@ export class AttendanceService {
   }
 
   async update(id: number, updateAttendanceDto: UpdateAttendanceDto) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0)
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
     await this.findOne(id);
     await this.attendanceRepo.update({ id }, updateAttendanceDto);
 
@@ -81,10 +77,6 @@ export class AttendanceService {
   }
 
   async remove(id: number) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0)
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
     await this.findOne(id);
     await this.attendanceRepo.delete(id);
 

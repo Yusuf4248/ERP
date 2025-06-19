@@ -1,5 +1,12 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { Student } from "../../student/entities/student.entities";
 import { Schedule } from "../../schedules/entities/schedule.entity";
 import { ApiProperty } from "@nestjs/swagger";
@@ -7,7 +14,7 @@ import { ApiProperty } from "@nestjs/swagger";
 @ObjectType()
 @Entity()
 export class Attendance {
-  @ApiProperty({ example: 1, description: 'Unikal ID raqami' })
+  @ApiProperty({ example: 1, description: "Unikal ID raqami" })
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
@@ -37,4 +44,12 @@ export class Attendance {
   @Field()
   @Column()
   status: string;
+
+  @CreateDateColumn({ name: "created_at" })
+  @Field()
+  created_at: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  @Field()
+  updated_at: Date;
 }
