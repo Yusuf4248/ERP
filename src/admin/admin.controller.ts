@@ -101,7 +101,7 @@ export class AdminController {
     return this.adminService.changePassword(+id, changePasswordDto);
   }
 
-  // @UseGuards(SuperAdminGuard)
+  @UseGuards(SuperAdminGuard)
   @Patch(":id/status")
   @ApiOperation({
     summary: "Admin statuslarini (is_creator, is_active) yangilash",
