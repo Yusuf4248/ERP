@@ -34,7 +34,7 @@ import { JwtSelfGuard } from "../common/guards/jwt-self.guard";
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
-  // @UseGuards(SuperAdminGuard)
+  @UseGuards(SuperAdminGuard)
   @Post()
   @ApiOperation({ summary: "Create a new admin" })
   @ApiResponse({ status: 201, description: "Admin successfully created." })
