@@ -1,5 +1,6 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import {
   IsString,
   IsEmail,
@@ -70,8 +71,8 @@ export class CreateTeacherDto {
   })
   @IsArray()
   @ArrayNotEmpty()
+  @Type(() => Number)
   @IsInt({ each: true })
   @Field(() => [Int])
-  @IsOptional()
-  branchId?: number[];
+  branchId: number[];
 }

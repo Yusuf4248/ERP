@@ -25,6 +25,7 @@ import { ExamResultsModule } from "./exam-results/exam-results.module";
 import { MediaModule } from "./media/media.module";
 import { MailModule } from "./mail/mail.module";
 import { FileModule } from "./file/file.module";
+import { LessonsModule } from './lessons/lessons.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { FileModule } from "./file/file.module";
     MediaModule,
     MailModule,
     FileModule,
+    LessonsModule,
   ],
   controllers: [],
   providers: [],

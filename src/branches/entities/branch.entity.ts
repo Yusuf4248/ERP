@@ -51,7 +51,7 @@ export class Branch {
   @OneToMany(() => Event, (event) => event.branch)
   events: Event[];
 
-  @ManyToMany(() => Teacher, (teacher) => teacher.branches, { nullable: true })
+  @ManyToMany(() => Teacher, (teacher) => teacher.branches)
   teachers: Teacher[];
 
   @CreateDateColumn({ name: "created_at" })

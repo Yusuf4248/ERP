@@ -29,6 +29,15 @@ export class CreateHomeworkDto {
   teacherId: number;
 
   @ApiProperty({
+    example: 1,
+    description: "Dars IDsi",
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  @Field()
+  lessonId: number;
+
+  @ApiProperty({
     example: "3-mavzu bo'yicha mashqlar",
     description: "Topshiriq tavsifi",
   })

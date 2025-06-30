@@ -9,12 +9,13 @@ import { Schedule } from "../schedules/entities/schedule.entity";
 import { StudentModule } from "../student/student.module";
 import { SchedulesModule } from "../schedules/schedules.module";
 import { JwtModule } from "@nestjs/jwt";
+import { LessonsModule } from "../lessons/lessons.module";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Attendance, Student, Schedule]),
+    TypeOrmModule.forFeature([Attendance, Student]),
     StudentModule,
-    SchedulesModule,
+    LessonsModule,
     JwtModule,
   ],
   controllers: [AttendanceController],

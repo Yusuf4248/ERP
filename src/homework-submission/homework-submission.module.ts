@@ -10,13 +10,22 @@ import { HomeworksModule } from "../homeworks/homeworks.module";
 import { Grade } from "../grades/entities/grade.entity";
 import { HomeworkSubmissionResolver } from "./homework-submission.resolver";
 import { JwtModule } from "@nestjs/jwt";
+import { Media } from "../media/entities/media.entity";
+import { FileModule } from "../file/file.module";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([HomeworkSubmission, Student, Homework, Grade]),
+    TypeOrmModule.forFeature([
+      HomeworkSubmission,
+      Student,
+      Homework,
+      Grade,
+      Media,
+    ]),
     StudentModule,
     HomeworksModule,
     JwtModule,
+    FileModule,
   ],
   controllers: [HomeworkSubmissionController],
   providers: [HomeworkSubmissionService, HomeworkSubmissionResolver],

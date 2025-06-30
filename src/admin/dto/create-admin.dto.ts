@@ -8,6 +8,7 @@ import {
   IsStrongPassword,
   IsInt,
   IsPositive,
+  IsOptional,
 } from "class-validator";
 
 @InputType()
@@ -60,5 +61,6 @@ export class CreateAdminDto {
   @Field(() => Int)
   @IsInt({ message: "branchId butun son bo'lishi kerak" })
   @IsPositive({ message: "branchId musbat bo'lishi kerak" })
-  branchId: number;
+  @IsOptional()
+  branchId?: number;
 }

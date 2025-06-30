@@ -48,4 +48,10 @@ export class CreateScheduleDto {
   @Field(() => Int, { nullable: true })
   @IsNumber()
   roomId: number;
+
+  @ApiProperty({
+    example: "2025-01-01",
+    description: "",
+  })
+  date: Date;
 }

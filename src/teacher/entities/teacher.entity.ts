@@ -98,7 +98,7 @@ export class Teacher {
   exam: Exam[];
 
   @Field({ nullable: true })
-  @ManyToMany(() => Branch, (branch) => branch.teachers, { nullable: true })
+  @ManyToMany(() => Branch, (branch) => branch.teachers, { cascade: true })
   @JoinTable()
   branches: Branch[];
 }

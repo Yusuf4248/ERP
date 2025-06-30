@@ -19,7 +19,7 @@ export class UpdateAttendanceDto {
   @IsNotEmpty()
   @IsInt()
   @IsOptional()
-  scheduleId?: number;
+  lessonId?: number;
 
   @Field()
   @IsNotEmpty()

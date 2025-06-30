@@ -15,7 +15,6 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Attendance } from "../../attendance/entities/attendance.entity";
 import { HomeworkSubmission } from "../../homework-submission/entities/homework-submission.entity";
 import { Grade } from "../../grades/entities/grade.entity";
-import { Lid } from "../../lid/entities/lid.entity";
 import { Payment } from "../../payments/entities/payment.entity";
 import { Event } from "../../events/entities/event.entity";
 import { Group } from "../../group/entities/group.entity";

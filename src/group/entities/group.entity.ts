@@ -18,6 +18,7 @@ import { Payment } from "../../payments/entities/payment.entity";
 import { Exam } from "../../exams/entities/exam.entity";
 import { Teacher } from "../../teacher/entities/teacher.entity";
 import { Student } from "../../student/entities/student.entities";
+import { Lesson } from "../../lessons/entities/lesson.entity";
 
 export enum GroupStatus {
   NEW = "new",
@@ -109,4 +110,8 @@ export class Group {
   @Field(() => [Exam])
   @OneToMany(() => Exam, (exam) => exam.group)
   exams: Exam[];
+
+  @Field(() => Lesson)
+  @OneToMany(() => Lesson, (lesson) => lesson.group)
+  lessons: Lesson[];
 }

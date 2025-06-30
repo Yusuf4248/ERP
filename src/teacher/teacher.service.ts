@@ -24,20 +24,23 @@ export class TeacherService {
   constructor(
     @InjectRepository(Teacher)
     private readonly teacherRepo: Repository<Teacher>,
-    @InjectRepository(Group)
+    @InjectRepository(Branch)
     private readonly branchRepo: Repository<Branch>,
     private readonly fileService: FileService
   ) {}
   async create(createTeacherDto: CreateTeacherDto) {
-    const { branchId } = createTeacherDto;
     let branches: Branch[] = [];
     const hashshed_password = await bcrypt.hash(createTeacherDto.password, 7);
 
-    if (Array.isArray(branchId) && branchId.length > 0) {
+    if (
+      Array.isArray(createTeacherDto.branchId) &&
+      createTeacherDto.branchId.length > 0
+    ) {
       branches = await this.branchRepo.find({
-        where: { id: In(branchId) },
+        where: { id: In(createTeacherDto.branchId) },
       });
     }
+
     const newTeacher = await this.teacherRepo.save({
       ...createTeacherDto,
       password: hashshed_password,
@@ -54,7 +57,7 @@ export class TeacherService {
     const teachers = await this.teacherRepo.find({
       relations: ["exam", "groups", "branches"],
     });
-    if (!teachers) {
+    if (teachers.length == 0) {
       throw new BadRequestException("Teacher not found");
     }
     return {

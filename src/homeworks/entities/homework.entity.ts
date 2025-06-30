@@ -12,6 +12,7 @@ import { Teacher } from "../../teacher/entities/teacher.entity";
 import { Group } from "../../group/entities/group.entity";
 import { HomeworkSubmission } from "../../homework-submission/entities/homework-submission.entity";
 import { ApiProperty } from "@nestjs/swagger";
+import { Lesson } from "../../lessons/entities/lesson.entity";
 
 @ObjectType()
 @Entity("homework")
@@ -59,7 +60,10 @@ export class Homework {
   })
   homework_submission: HomeworkSubmission[];
 
-  
+  @ManyToOne(() => Lesson, (lesson) => lesson.homework)
+  @Field(() => Lesson)
+  lesson: Lesson;
+
   @CreateDateColumn({ name: "created_at" })
   @Field()
   @ApiProperty({

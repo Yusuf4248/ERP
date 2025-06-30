@@ -24,17 +24,29 @@ export class AdminService {
       createAdminDto.password_hash,
       7
     );
-    const branch = await this.branchService.findOne(createAdminDto.branchId);
-    const newAdmin = await this.adminRepo.save({
-      ...createAdminDto,
-      branch: branch.branch,
-      password_hash: hashshed_password,
-    });
-    return {
-      Message: "New Admin Created",
-      success: true,
-      newAdmin,
-    };
+    if (createAdminDto.branchId) {
+      const branch = await this.branchService.findOne(createAdminDto.branchId);
+      const newAdmin = await this.adminRepo.save({
+        ...createAdminDto,
+        branch: branch.branch,
+        password_hash: hashshed_password,
+      });
+      return {
+        Message: "New Admin Created",
+        success: true,
+        newAdmin,
+      };
+    } else {
+      const newAdmin = await this.adminRepo.save({
+        ...createAdminDto,
+        password_hash: hashshed_password,
+      });
+      return {
+        Message: "New Admin Created",
+        success: true,
+        newAdmin,
+      };
+    }
   }
 
   async findAll() {
@@ -53,7 +65,10 @@ export class AdminService {
       throw new BadRequestException(
         "ID must be integer and must be greater than zero"
       );
-    const admin = await this.adminRepo.findOneBy({ id });
+    const admin = await this.adminRepo.findOne({
+      where: { id },
+      relations: ["branch"],
+    });
     if (!admin) {
       throw new BadRequestException(`Admin with id-${id} not found`);
     }
@@ -72,7 +87,10 @@ export class AdminService {
     await this.findOne(id);
     await this.adminRepo.update({ id }, updateAdminDto);
 
-    const admin = await this.adminRepo.findOneBy({ id });
+    const admin = await this.adminRepo.findOne({
+      where: { id },
+      relations: ["branch"],
+    });
     return {
       message: "Admin data updated",
       success: true,
@@ -142,6 +160,18 @@ export class AdminService {
       message: "Admin holati muvaffaqiyatli yangilandi",
       old_data,
       new_data,
+    };
+  }
+
+  async addBranch(branchId: number, id: number) {
+    const admin = await this.findOne(id);
+    const { branch } = await this.branchService.findOne(branchId);
+
+    const update_admin = await this.adminRepo.update({ id }, { branch });
+    return {
+      message: "Updated",
+      success: true,
+      admin,
     };
   }
 }

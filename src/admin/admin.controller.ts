@@ -34,7 +34,7 @@ import { JwtSelfGuard } from "../common/guards/jwt-self.guard";
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
-  @UseGuards(SuperAdminGuard)
+  // @UseGuards(SuperAdminGuard)
   @Post()
   @ApiOperation({ summary: "Create a new admin" })
   @ApiResponse({ status: 201, description: "Admin successfully created." })
@@ -101,7 +101,7 @@ export class AdminController {
     return this.adminService.changePassword(+id, changePasswordDto);
   }
 
-  @UseGuards(SuperAdminGuard)
+  // @UseGuards(SuperAdminGuard)
   @Patch(":id/status")
   @ApiOperation({
     summary: "Admin statuslarini (is_creator, is_active) yangilash",
@@ -136,5 +136,10 @@ export class AdminController {
     @Body() dto: UpdateAdminStatusDto
   ) {
     return this.adminService.updateStatus(id, dto);
+  }
+
+  @Patch(":id/branch/:branchId")
+  addBranch(@Param("id") id: string, @Param("branchId") branchId: string) {
+    return this.adminService.addBranch(+branchId, +id);
   }
 }

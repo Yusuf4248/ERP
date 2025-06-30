@@ -10,6 +10,7 @@ import {
 import { Student } from "../../student/entities/student.entities";
 import { Schedule } from "../../schedules/entities/schedule.entity";
 import { ApiProperty } from "@nestjs/swagger";
+import { Lesson } from "../../lessons/entities/lesson.entity";
 
 @ObjectType()
 @Entity()
@@ -23,11 +24,11 @@ export class Attendance {
   @ManyToOne(() => Student, (student) => student.attendance)
   student: Student;
 
-  @ApiProperty({ type: () => Schedule, description: "Dars jadvali obyekti" })
-  @ManyToOne(() => Schedule, (schedule) => schedule.attendance, {
+  @ApiProperty({ type: () => Lesson, description: "Dars jadvali obyekti" })
+  @ManyToOne(() => Lesson, (lesson) => lesson.attendance, {
     eager: false,
   })
-  schedule: Schedule;
+  lesson: Lesson;
 
   @ApiProperty({
     example: "2025-06-01T09:00:00.000Z",

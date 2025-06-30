@@ -12,6 +12,7 @@ import { Group } from "../../group/entities/group.entity";
 import { Attendance } from "../../attendance/entities/attendance.entity";
 import { ApiProperty } from "@nestjs/swagger";
 import { Room } from "../../rooms/entities/room.entity";
+import { Lesson } from "../../lessons/entities/lesson.entity";
 
 @ObjectType()
 @Entity()
@@ -31,14 +32,6 @@ export class Schedule {
   @Field(() => Group)
   @ManyToOne(() => Group, (group) => group.schedules, { onDelete: "CASCADE" })
   group: Group;
-
-  @ApiProperty({
-    description: "Attendance ro'yxati",
-    type: () => [Attendance],
-    isArray: true,
-  })
-  @OneToMany(() => Attendance, (attendance) => attendance.schedule)
-  attendance: Attendance[];
 
   @ApiProperty({
     example: "2025-06-01T09:00:00.000Z",
@@ -70,6 +63,14 @@ export class Schedule {
   })
   @ManyToOne(() => Room, (room) => room.schedules)
   room: Room;
+
+  @Field(() => [Lesson])
+  @OneToMany(() => Lesson, (lesson) => lesson.schedule, { nullable: true })
+  lessons: Lesson[];
+
+  @Field()
+  @Column()
+  date: Date;
 
   @CreateDateColumn({ name: "created_at" })
   @Field()

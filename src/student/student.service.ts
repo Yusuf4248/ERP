@@ -19,6 +19,11 @@ import { Homework } from "../homeworks/entities/homework.entity";
 import * as path from "path";
 import * as fs from "fs";
 import * as bcrypt from "bcrypt";
+import { Media } from "../media/entities/media.entity";
+import {
+  HomeworkStatus,
+  HomeworkSubmission,
+} from "../homework-submission/entities/homework-submission.entity";
 
 @Injectable()
 export class StudentService {
@@ -31,6 +36,10 @@ export class StudentService {
     private readonly groupRepo: Repository<Group>,
     @InjectRepository(Homework)
     private readonly homeworkRepo: Repository<Homework>,
+    @InjectRepository(Media)
+    private readonly mediaRepo: Repository<Media>,
+    @InjectRepository(HomeworkSubmission)
+    private readonly homeworkSubmissionRepo: Repository<HomeworkSubmission>,
     private readonly fileService: FileService
   ) {}
   async create(createStudentDto: CreateStudentDto) {
@@ -93,7 +102,7 @@ export class StudentService {
       );
     const student = await this.studentRepo.findOne({
       where: { id },
-      relations: ["events", "groups"],
+      relations: ["events", "groups", "groups.course"],
     });
     if (!student) {
       throw new BadRequestException(`student with ${id}-id not fount`);
@@ -216,7 +225,30 @@ export class StudentService {
     res.sendFile(avatarPath);
   }
 
-  async getAllStudentHomeworksByGroup(studentId: number, groupId: number) {
+  async findStudentAllGroups(id: number) {
+    const { student } = await this.findOne(id);
+    if (student.groups.length == 0) {
+      throw new NotFoundException("The student has no group.");
+    }
+    const groups = student.groups.map((group) => ({
+      name: group.name,
+      course: group.course.title,
+      start_date: group.start_date,
+      end_date: group.end_date,
+      status: group.status,
+    }));
+    return {
+      groups,
+    };
+  }
+
+  async getStudentHomeworksByGroup(
+    studentId: number,
+    groupId: number,
+    page: number,
+    limit: number,
+    status: HomeworkStatus
+  ) {
     if (!Number.isInteger(Number(groupId)) || Number(groupId) <= 0)
       throw new BadRequestException(
         "ID must be integer and must be greater than zero"
@@ -237,13 +269,55 @@ export class StudentService {
         `${studentId}-student not found in this group`
       );
     }
+    if (page <= 0 || limit <= 0)
+      throw new BadRequestException("Page and limit must be greater than zero");
+    const skip = (page - 1) * limit;
 
-    const homeworks = await this.homeworkRepo.find();
+    if (!status) {
+      const [homeworks, total] = await this.homeworkRepo.findAndCount({
+        relations: ["teacher", "group"],
+        skip,
+        take: limit,
+        order: { id: "DESC" },
+      });
+      if (homeworks.length == 0) {
+        throw new NotFoundException("Homework not found");
+      }
 
-    if (homeworks.length == 0) {
-      throw new NotFoundException("Homework not found");
+      return {
+        success: true,
+        total,
+        page,
+        limit,
+        homeworks,
+      };
+    } else {
+      const [homeworks, total] = await this.homeworkSubmissionRepo.findAndCount(
+        {
+          where: {
+            student: { id: studentId },
+            homework: { group: { id: groupId } },
+            status: status,
+          },
+          relations: ["homework", "homework.group", "homework.teacher"],
+          skip,
+          take: limit,
+          order: { id: "DESC" },
+        }
+      );
+
+      if (homeworks.length == 0) {
+        throw new NotFoundException("Homework not found");
+      }
+
+      return {
+        success: true,
+        total,
+        page,
+        limit,
+        status,
+        homeworks,
+      };
     }
-
-    return homeworks;
   }
 }

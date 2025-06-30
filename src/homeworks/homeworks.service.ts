@@ -13,6 +13,7 @@ import { TeacherService } from "../teacher/teacher.service";
 import { Media } from "../media/entities/media.entity";
 import * as path from "path";
 import { FileService } from "../file/file.service";
+import { LessonsService } from "../lessons/lessons.service";
 
 @Injectable()
 export class HomeworksService {
@@ -23,17 +24,27 @@ export class HomeworksService {
     private readonly mediaRepo: Repository<Media>,
     private readonly groupService: GroupService,
     private readonly teacherService: TeacherService,
-    private readonly fileService: FileService
+    private readonly fileService: FileService,
+    private readonly lessonService: LessonsService
   ) {}
   async create(createHomeworkDto: CreateHomeworkDto) {
-    const group = await this.groupService.findOne(createHomeworkDto.groupId);
-    const teacher = await this.teacherService.findOne(
-      createHomeworkDto.teacherId
-    );
+    const { teacherId, groupId, lessonId } = createHomeworkDto;
+    const { lesson } = await this.lessonService.findOne(lessonId);
+    const { group } = await this.groupService.findOne(groupId);
+    const { teacher } = await this.teacherService.findOne(teacherId);
+    const isGiven = await this.homeworkRepo.findOne({
+      where: { lesson: { id: lessonId } },
+    });
+    if (isGiven) {
+      throw new BadRequestException(
+        "Homework has already been assigned for this lesson"
+      );
+    }
     const newHomework = await this.homeworkRepo.save({
       ...createHomeworkDto,
-      group: group.group,
-      teacher: teacher.teacher,
+      group,
+      teacher,
+      lesson,
     });
     return {
       message: "New homework created!",
@@ -60,7 +71,7 @@ export class HomeworksService {
 
   async findAll() {
     const homework = await this.homeworkRepo.find({
-      relations: ["teacher", "group"],
+      relations: ["teacher", "group", "lesson"],
     });
     if (homework.length == 0) {
       throw new NotFoundException("Homework not found");
@@ -79,7 +90,7 @@ export class HomeworksService {
     }
     const homework = await this.homeworkRepo.findOne({
       where: { id },
-      relations: ["teacher", "group"],
+      relations: ["teacher", "group", "lesson"],
     });
     if (!homework) {
       throw new NotFoundException(`Homework-${id} not found`);

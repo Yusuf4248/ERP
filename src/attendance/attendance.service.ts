@@ -10,6 +10,7 @@ import { Attendance } from "./entities/attendance.entity";
 import { Repository } from "typeorm";
 import { StudentService } from "../student/student.service";
 import { SchedulesService } from "../schedules/schedules.service";
+import { LessonsService } from "../lessons/lessons.service";
 
 @Injectable()
 export class AttendanceService {
@@ -17,15 +18,15 @@ export class AttendanceService {
     @InjectRepository(Attendance)
     private readonly attendanceRepo: Repository<Attendance>,
     private readonly studentService: StudentService,
-    private readonly scheduleService: SchedulesService
+    private readonly lessonService: LessonsService
   ) {}
   async create(createAttendanceDto: CreateAttendanceDto) {
-    const { scheduleId, studentId } = createAttendanceDto;
+    const { lessonId, studentId } = createAttendanceDto;
     const { student } = await this.studentService.findOne(studentId);
-    const { schedule } = await this.scheduleService.findOne(scheduleId);
+    const { lesson } = await this.lessonService.findOne(lessonId);
     const attendance = this.attendanceRepo.create({
       ...createAttendanceDto,
-      schedule,
+      lesson,
       student,
     });
     return this.attendanceRepo.save(attendance);
@@ -33,7 +34,7 @@ export class AttendanceService {
 
   async findAll() {
     const attendance = await this.attendanceRepo.find({
-      relations: ["student", "schedule"],
+      relations: ["student", "lesson"],
     });
     if (attendance.length == 0) {
       throw new NotFoundException("Attendance not found");
@@ -52,7 +53,7 @@ export class AttendanceService {
       );
     const attandance = await this.attendanceRepo.findOne({
       where: { id },
-      relations: ["student", "schedule"],
+      relations: ["student", "lesson"],
     });
     if (!attandance) {
       throw new NotFoundException(`${id}-attandances not found`);

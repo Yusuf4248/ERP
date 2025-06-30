@@ -11,6 +11,7 @@ import {
   UploadedFile,
   UseGuards,
   Res,
+  Query,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import {
@@ -34,6 +35,7 @@ import { JwtSelfGuard } from "../common/guards/jwt-self.guard";
 import { Roles } from "../app.constants";
 import { Response } from "express";
 import { Homework } from "../homeworks/entities/homework.entity";
+import { HomeworkStatus } from "../homework-submission/entities/homework-submission.entity";
 
 @ApiTags("Students")
 @ApiBearerAuth("JWT-auth")
@@ -178,11 +180,24 @@ export class StudentController {
   })
   getAllStudentHomeworksByGroup(
     @Param("studentId") studentId: number,
-    @Param("groupId") groupId: number
+    @Param("groupId") groupId: number,
+    @Query("page") page = 1,
+    @Query("limit") limit = 10,
+    @Query("status") status: HomeworkStatus
   ) {
-    return this.studentService.getAllStudentHomeworksByGroup(
+    return this.studentService.getStudentHomeworksByGroup(
       studentId,
-      groupId
+      groupId,
+      page,
+      limit,
+      status
     );
+  }
+
+  @Get(":id/groups")
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles("student", "admin", "superadmin")
+  getStudentAllGroups(@Param("id", ParseIntPipe) id: number) {
+    return this.studentService.findStudentAllGroups(id);
   }
 }
