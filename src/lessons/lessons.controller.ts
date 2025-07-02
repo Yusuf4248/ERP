@@ -76,23 +76,23 @@ export class LessonsController {
     return this.lessonsService.remove(id);
   }
 
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles("superadmin", "admin", "teacher", "student")
-  @Get("by-group/:groupId")
-  @ApiOperation({ summary: "Get lessons by group (only for student/teacher)" })
-  @ApiQuery({ name: "page", required: false, example: 1 })
-  @ApiQuery({ name: "limit", required: false, example: 10 })
-  async findAllByGroup(
-    @Param("groupId", ParseIntPipe) groupId: number,
-    @Query("page") page = 1,
-    @Query("limit") limit = 10,
-    @Request() req: any
-  ) {
-    return this.lessonsService.findAllLessonsByGroup(
-      groupId,
-      Number(page),
-      Number(limit),
-      req.user
-    );
-  }
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @Roles("superadmin", "admin", "teacher", "student")
+  // @Get("by-group/:groupId")
+  // @ApiOperation({ summary: "Get lessons by group (only for student/teacher)" })
+  // @ApiQuery({ name: "page", required: false, example: 1 })
+  // @ApiQuery({ name: "limit", required: false, example: 10 })
+  // async findAllByGroup(
+  //   @Param("groupId", ParseIntPipe) groupId: number,
+  //   @Query("page") page = 1,
+  //   @Query("limit") limit = 10,
+  //   @Request() req: any
+  // ) {
+  //   return this.lessonsService.findAllLessonsByGroup(
+  //     groupId,
+  //     Number(page),
+  //     Number(limit),
+  //     req.user
+  //   );
+  // }
 }

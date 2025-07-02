@@ -40,9 +40,6 @@ export class SchedulesService {
     const schedules = await this.scheduleRepo.find({
       relations: ["room", "group"],
     });
-    if (schedules.length == 0) {
-      throw new NotFoundException("Schedule not found!");
-    }
     return {
       message: "All schedules",
       success: true,
@@ -71,11 +68,6 @@ export class SchedulesService {
   }
 
   async update(id: number, updateScheduleDto: UpdateScheduleDto) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.scheduleRepo.update(id, updateScheduleDto);
     const { ...updated_schedule } = await this.findOne(id);
@@ -88,11 +80,6 @@ export class SchedulesService {
   }
 
   async remove(id: number) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.scheduleRepo.delete(id);
 

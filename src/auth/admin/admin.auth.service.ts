@@ -7,8 +7,8 @@ import { AdminService } from "../../admin/admin.service";
 import { JwtService } from "@nestjs/jwt";
 import { Admin } from "../../admin/entities/admin.entity";
 import { LoginDto } from "../dto/login.dto";
-import * as bcrypt from "bcrypt";
 import { Request, Response } from "express";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AdminAuthService {

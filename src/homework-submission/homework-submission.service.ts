@@ -70,9 +70,6 @@ export class HomeworkSubmissionService {
     const homework_submission = await this.homeworkSubmissionRepo.find({
       relations: ["student", "homework"],
     });
-    if (homework_submission.length == 0) {
-      throw new NotFoundException("Homework submission not found");
-    }
     return {
       success: true,
       homework_submission,

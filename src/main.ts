@@ -28,6 +28,7 @@ async function start() {
         const allowedOrigin = [
           "http://localhost:6969",
           "http://localhost:5173",
+          "http://185.191.141.200:6969",
           "http://185.191.141.200:3030",
           "http://erp.uz",
           "http://api.erp.uz",

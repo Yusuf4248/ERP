@@ -27,9 +27,6 @@ export class PaymentTypesService {
 
   async findAll() {
     const paymetnTypes = await this.paymentTypeRepo.find();
-    if (paymetnTypes.length == 0) {
-      throw new NotFoundException("Payment types not found");
-    }
     return {
       message: "All payment types",
       success: true,
@@ -55,11 +52,6 @@ export class PaymentTypesService {
   }
 
   async update(id: number, updatePaymentTypeDto: UpdatePaymentTypeDto) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.paymentTypeRepo.update({ id }, updatePaymentTypeDto);
 
@@ -73,11 +65,6 @@ export class PaymentTypesService {
   }
 
   async remove(id: number) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.paymentTypeRepo.delete(id);
 

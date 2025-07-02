@@ -36,9 +36,6 @@ export class AttendanceService {
     const attendance = await this.attendanceRepo.find({
       relations: ["student", "lesson"],
     });
-    if (attendance.length == 0) {
-      throw new NotFoundException("Attendance not found");
-    }
     return {
       message: "All attandances",
       success: true,

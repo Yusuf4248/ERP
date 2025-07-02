@@ -33,9 +33,9 @@ import { AuthGuard } from "../common/guards/auth.guard";
 import { RolesGuard } from "../common/guards/role.guard";
 import { JwtSelfGuard } from "../common/guards/jwt-self.guard";
 import { Roles } from "../app.constants";
-import { Response } from "express";
 import { Homework } from "../homeworks/entities/homework.entity";
 import { HomeworkStatus } from "../homework-submission/entities/homework-submission.entity";
+import { Response } from "express";
 
 @ApiTags("Students")
 @ApiBearerAuth("JWT-auth")

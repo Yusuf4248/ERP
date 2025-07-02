@@ -31,9 +31,6 @@ export class RoomsService {
 
   async findAll() {
     const rooms = await this.roomRepo.find({ relations: ["branch"] });
-    if (rooms.length == 0) {
-      throw new NotFoundException("Room not found");
-    }
     return {
       message: "All rooms",
       success: true,
@@ -62,11 +59,6 @@ export class RoomsService {
   }
 
   async update(id: number, updateRoomDto: UpdateRoomDto) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.roomRepo.update({ id }, updateRoomDto);
 
@@ -79,11 +71,6 @@ export class RoomsService {
   }
 
   async remove(id: number) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.roomRepo.delete(id);
 

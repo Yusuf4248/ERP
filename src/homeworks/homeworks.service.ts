@@ -73,9 +73,6 @@ export class HomeworksService {
     const homework = await this.homeworkRepo.find({
       relations: ["teacher", "group", "lesson"],
     });
-    if (homework.length == 0) {
-      throw new NotFoundException("Homework not found");
-    }
     return {
       success: true,
       homework,
@@ -103,11 +100,6 @@ export class HomeworksService {
   }
 
   async update(id: number, updateHomeworkDto: UpdateHomeworkDto) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.homeworkRepo.update({ id }, updateHomeworkDto);
 
@@ -120,11 +112,6 @@ export class HomeworksService {
   }
 
   async remove(id: number) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.homeworkRepo.delete(id);
 

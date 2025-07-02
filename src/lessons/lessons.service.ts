@@ -42,9 +42,6 @@ export class LessonsService {
       take: limit,
       order: { id: "DESC" },
     });
-    if (lessons.length == 0) {
-      throw new NotFoundException("Lessons not found!");
-    }
     return {
       success: true,
       total,
@@ -96,15 +93,15 @@ export class LessonsService {
     };
   }
 
-  async findAllLessonsByGroup(
-    groupId: number,
-    page: number,
-    limit: number,
-    user: { id: number; role: string }
-  ) {
-    let isAllowed: boolean = false;
-    const { id, role } = user;
-    console.log(user);
-    // const { group } = await this.groupService.findOne(groupId);
-  }
+  // async findAllLessonsByGroup(
+  //   groupId: number,
+  //   page: number,
+  //   limit: number,
+  //   user: { id: number; role: string }
+  // ) {
+  //   let isAllowed: boolean = false;
+  //   const { id, role } = user;
+  //   console.log(user);
+  //   // const { group } = await this.groupService.findOne(groupId);
+  // }
 }

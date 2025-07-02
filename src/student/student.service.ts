@@ -87,8 +87,6 @@ export class StudentService {
     const students = await this.studentRepo.find({
       relations: ["events", "groups"],
     });
-    if (students.length == 0)
-      throw new BadRequestException("Students not found");
     return {
       success: true,
       students,
@@ -115,10 +113,6 @@ export class StudentService {
   }
 
   async update(id: number, updateStudentDto: UpdateStudentDto) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0)
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
     await this.findOne(id);
     await this.studentRepo.update({ id }, updateStudentDto);
 
@@ -131,10 +125,6 @@ export class StudentService {
   }
 
   async remove(id: number) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0)
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
     await this.findOne(id);
     await this.studentRepo.delete({ id });
     return {
@@ -205,8 +195,9 @@ export class StudentService {
 
   async viewAvatar(id: number, res: Response) {
     const { student } = await this.findOne(id);
+
     if (!student || !student.avatar_url) {
-      return res.status(404).json({ message: "Avatar topilmadi" });
+      throw new NotFoundException("Avatar topilmadi");
     }
 
     const avatarPath = path.join(
@@ -217,10 +208,6 @@ export class StudentService {
       "student",
       student.avatar_url
     );
-
-    if (!fs.existsSync(avatarPath)) {
-      return res.status(404).json({ message: "Fayl mavjud emas" });
-    }
 
     res.sendFile(avatarPath);
   }

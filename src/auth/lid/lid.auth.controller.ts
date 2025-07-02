@@ -8,9 +8,9 @@ import { CreateLidDto } from "../../lid/dto/create-lid.dto";
 export class LidAuthController {
   constructor(private readonly lidAuthService: LidAuthService) {}
 
-  @Post("logUp")
+  @Post("register")
   async logUp(@Body() createLidDto: CreateLidDto) {
-    return this.lidAuthService.logUp(createLidDto);
+    return this.lidAuthService.register(createLidDto);
   }
 
   @Post("logIn")

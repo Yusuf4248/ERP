@@ -46,9 +46,6 @@ export class PaymentsService {
     const payments = await this.paymentRepo.find({
       relations: ["student", "group", "paymentType"],
     });
-    if (payments.length == 0) {
-      throw new NotFoundException("Payment not found");
-    }
     return {
       message: "All payments",
       success: true,
@@ -77,11 +74,6 @@ export class PaymentsService {
   }
 
   async update(id: number, updatePaymentDto: UpdatePaymentDto) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.paymentRepo.update({ id }, updatePaymentDto);
 
@@ -94,11 +86,6 @@ export class PaymentsService {
   }
 
   async remove(id: number) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.paymentRepo.delete(id);
 

@@ -40,9 +40,6 @@ export class ExamResultsService {
     const examResults = await this.examResultRepo.find({
       relations: ["exam", "student"],
     });
-    if (examResults.length == 0) {
-      throw new NotFoundException("Exam result not found");
-    }
     return {
       message: "All exam results",
       success: true,

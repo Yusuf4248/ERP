@@ -41,7 +41,7 @@ export class LidAuthService {
     };
   }
 
-  async logUp(createLidDto: CreateLidDto) {
+  async register(createLidDto: CreateLidDto) {
     const candidate = await this.lidService.findByEmail(createLidDto.email);
     if (candidate) {
       throw new BadRequestException("Lid with this email already exists");

@@ -52,9 +52,6 @@ export class GroupService {
       take: limit,
       order: { id: "ASC" },
     });
-    if (groups.length == 0) {
-      throw new NotFoundException("Groups not found");
-    }
     return {
       success: true,
       total,
@@ -84,10 +81,6 @@ export class GroupService {
   }
 
   async update(id: number, updateGroupDto: UpdateGroupDto) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0)
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
     await this.findOne(id);
     await this.groupRepo.update({ id }, updateGroupDto);
 
@@ -100,10 +93,6 @@ export class GroupService {
   }
 
   async remove(id: number) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0)
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
     await this.findOne(id);
     await this.groupRepo.delete({ id });
     return {

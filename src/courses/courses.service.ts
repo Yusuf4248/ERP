@@ -25,9 +25,6 @@ export class CoursesService {
 
   async findAll() {
     const courses = await this.courseRepo.find({ relations: ["groups"] });
-    if (courses.length == 0) {
-      throw new NotFoundException("Course not found");
-    }
     return {
       success: true,
       message: "Courses:",
@@ -53,9 +50,6 @@ export class CoursesService {
   }
 
   async update(id: number, updateCourseDto: UpdateCourseDto) {
-    if (!Number.isInteger(id) || Number(id) <= 0) {
-      throw new BadRequestException("ID must be integer and greater than zero");
-    }
     await this.findOne(id);
     await this.courseRepo.update({ id }, updateCourseDto);
 
@@ -68,9 +62,6 @@ export class CoursesService {
   }
 
   async remove(id: number) {
-    if (!Number.isInteger(id) || Number(id) <= 0) {
-      throw new BadRequestException("ID must be integer and greater than zero");
-    }
     await this.findOne(id);
     await this.courseRepo.delete({ id });
     return {

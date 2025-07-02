@@ -46,9 +46,6 @@ export class EventsService {
     const events = await this.eventRepo.find({
       relations: ["branch", "students"],
     });
-    if (events.length == 0) {
-      throw new NotFoundException("Events not found");
-    }
     return {
       message: "All events",
       success: true,
@@ -77,11 +74,6 @@ export class EventsService {
   }
 
   async update(id: number, updateEventDto: UpdateEventDto) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.eventRepo.update({ id }, updateEventDto);
 
@@ -94,11 +86,6 @@ export class EventsService {
   }
 
   async remove(id: number) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.eventRepo.delete(id);
 

@@ -52,9 +52,6 @@ export class LidService {
 
   async findAll() {
     const lid = await this.lidRepo.find();
-    if (lid.length == 0) {
-      throw new NotFoundException("Lids not found");
-    }
     return {
       message: "Al lids",
       success: true,
@@ -82,11 +79,6 @@ export class LidService {
   }
 
   async update(id: number, updateLidDto: UpdateLidDto) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.lidRepo.update({ id }, updateLidDto);
 
@@ -99,11 +91,6 @@ export class LidService {
   }
 
   async remove(id: number) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.lidRepo.delete(id);
 
@@ -185,7 +172,7 @@ export class LidService {
   }
 
   async verifyOtp(otp_id: string, verifyOtpDto: VerifyOtpDto) {
-    let otp_details;
+    let otp_details: any;
     const currentDate = new Date();
     if (verifyOtpDto.verification_key) {
       const decodedData = await decode(verifyOtpDto.verification_key);

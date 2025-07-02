@@ -31,9 +31,6 @@ export class BranchesService {
     const branch = await this.branchRepo.find({
       relations: ["teachers"],
     });
-    if (branch.length == 0) {
-      throw new NotFoundException("Branch not found");
-    }
     return {
       message: "All branches",
       success: true,

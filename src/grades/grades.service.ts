@@ -48,9 +48,6 @@ export class GradesService {
     const grades = await this.gradeRepo.find({
       relations: ["teacher", "student", "homework_submission"],
     });
-    if (grades.length == 0) {
-      throw new NotFoundException("Grade not found");
-    }
     return {
       success: true,
       grades,
@@ -78,11 +75,6 @@ export class GradesService {
   }
 
   async update(id: number, updateGradeDto: UpdateGradeDto) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.gradeRepo.update({ id }, updateGradeDto);
 
@@ -95,11 +87,6 @@ export class GradesService {
   }
 
   async remove(id: number) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    }
     await this.findOne(id);
     await this.gradeRepo.delete(id);
 

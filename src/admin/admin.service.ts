@@ -51,9 +51,6 @@ export class AdminService {
 
   async findAll() {
     const admins = await this.adminRepo.find({ relations: ["branch"] });
-    if (admins.length == 0) {
-      throw new BadRequestException("Admins not found");
-    }
     return {
       success: true,
       admins,
@@ -80,10 +77,6 @@ export class AdminService {
   }
 
   async update(id: number, updateAdminDto: UpdateAdminDto) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0)
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
     await this.findOne(id);
     await this.adminRepo.update({ id }, updateAdminDto);
 
@@ -99,10 +92,6 @@ export class AdminService {
   }
 
   async remove(id: number) {
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0)
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
     await this.findOne(id);
     await this.adminRepo.delete({ id });
 
@@ -164,10 +153,11 @@ export class AdminService {
   }
 
   async addBranch(branchId: number, id: number) {
-    const admin = await this.findOne(id);
+    await this.findOne(id);
     const { branch } = await this.branchService.findOne(branchId);
 
-    const update_admin = await this.adminRepo.update({ id }, { branch });
+    await this.adminRepo.update({ id }, { branch });
+    const admin = await this.findOne(id);
     return {
       message: "Updated",
       success: true,

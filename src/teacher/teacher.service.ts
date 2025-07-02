@@ -57,9 +57,6 @@ export class TeacherService {
     const teachers = await this.teacherRepo.find({
       relations: ["exam", "groups", "branches"],
     });
-    if (teachers.length == 0) {
-      throw new BadRequestException("Teacher not found");
-    }
     return {
       success: true,
       teachers,
