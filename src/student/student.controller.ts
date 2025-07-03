@@ -97,7 +97,7 @@ export class StudentController {
 
   @UseGuards(AuthGuard, RolesGuard, JwtSelfGuard)
   @Roles("superadmin", "admin", "student")
-  @Patch("change_password/:id")
+  @Patch("change-password/:id")
   @ApiOperation({
     summary: "Parolni o'zgartirish (o'ziga tegishli foydalanuvchi)",
   })

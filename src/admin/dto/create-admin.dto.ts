@@ -9,6 +9,7 @@ import {
   IsInt,
   IsPositive,
   IsOptional,
+  IsArray,
 } from "class-validator";
 
 @InputType()
@@ -55,12 +56,14 @@ export class CreateAdminDto {
   password_hash: string;
 
   @ApiProperty({
-    example: 1,
-    description: "Filial ID (branchId)",
+    example: [1],
+    description:
+      "Filial IDsi (array ichida bo'lishi kerak misol uchun [1,2...])",
   })
   @Field(() => Int)
   @IsInt({ message: "branchId butun son bo'lishi kerak" })
   @IsPositive({ message: "branchId musbat bo'lishi kerak" })
+  @IsArray()
   @IsOptional()
-  branchId?: number;
+  branchId?: number[];
 }

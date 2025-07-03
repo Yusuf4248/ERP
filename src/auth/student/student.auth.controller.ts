@@ -7,7 +7,7 @@ import { StudentAuthService } from "./student.auth.service";
 export class StudentAuthController {
   constructor(private readonly studentAuthService: StudentAuthService) {}
 
-  @Post("logIn")
+  @Post("log-in")
   async logIn(
     @Body() logInDto: LoginDto,
     @Res({ passthrough: true }) res: Response
@@ -15,7 +15,7 @@ export class StudentAuthController {
     return this.studentAuthService.logIn(logInDto, res);
   }
 
-  @Get("logOut")
+  @Get("log-out")
   logOut(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response
@@ -23,7 +23,7 @@ export class StudentAuthController {
     return this.studentAuthService.logOut(request, response);
   }
 
-  @Get("refreshTokens")
+  @Get("refresh-tokens")
   refreshTokens(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response

@@ -7,7 +7,7 @@ import { LoginDto } from "../dto/login.dto";
 export class TeacherAuthController {
   constructor(private readonly teacherAuthService: TeacherAuthService) {}
 
-  @Post("logIn")
+  @Post("log-in")
   async signIn(
     @Body() logInDto: LoginDto,
     @Res({ passthrough: true }) res: Response
@@ -15,7 +15,7 @@ export class TeacherAuthController {
     return this.teacherAuthService.logIn(logInDto, res);
   }
 
-  @Get("logOut")
+  @Get("log-out")
   signout(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response
@@ -23,7 +23,7 @@ export class TeacherAuthController {
     return this.teacherAuthService.logOut(request, response);
   }
 
-  @Get("refreshTokens")
+  @Get("refresh-tokens")
   refreshTokens(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response

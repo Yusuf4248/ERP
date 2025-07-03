@@ -46,7 +46,7 @@ export class Group {
     description: "Group name",
   })
   @Field()
-  @Column({ type: "varchar", length: 100 })
+  @Column({ type: "varchar", length: 100, unique: true })
   name: string;
 
   @ApiProperty({ example: 2, description: "Related course ID" })

@@ -5,6 +5,7 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
 } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
@@ -72,8 +73,8 @@ export class Admin {
   @Column({ type: "varchar", nullable: true })
   refersh_token_hash: string;
 
-  @ManyToOne(() => Branch, (branch) => branch.admin)
-  branch: Branch;
+  @ManyToMany(() => Branch, (branch) => branch.admin)
+  branch: Branch[];
 
   @CreateDateColumn({ name: "created_at" })
   @Field()

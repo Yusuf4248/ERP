@@ -44,7 +44,7 @@ export class Branch {
   @Field(() => [Room])
   room: Room[];
 
-  @OneToMany(() => Admin, (admin) => admin.branch)
+  @ManyToMany(() => Admin, (admin) => admin.branch)
   @Field(() => [Admin])
   admin: Admin[];
 

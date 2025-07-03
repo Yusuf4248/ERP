@@ -7,16 +7,18 @@ import { CreateAdminDto } from "./dto/create-admin.dto";
 import { UpdateAdminDto } from "./dto/update-admin.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Admin } from "./entities/admin.entity";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { ChangePasswordDto } from "../student/dto/change-password.dto";
 import { BranchesService } from "../branches/branches.service";
 import { UpdateAdminStatusDto } from "./dto/update-admin-status.dto";
 import * as bcrypt from "bcrypt";
+import { Branch } from "../branches/entities/branch.entity";
 
 @Injectable()
 export class AdminService {
   constructor(
     @InjectRepository(Admin) private readonly adminRepo: Repository<Admin>,
+    @InjectRepository(Admin) private readonly branchRepo: Repository<Branch>,
     private readonly branchService: BranchesService
   ) {}
   async create(createAdminDto: CreateAdminDto) {
@@ -25,10 +27,12 @@ export class AdminService {
       7
     );
     if (createAdminDto.branchId) {
-      const branch = await this.branchService.findOne(createAdminDto.branchId);
+      const branch = await this.branchRepo.find({
+        where: { id: In(createAdminDto.branchId) },
+      });
       const newAdmin = await this.adminRepo.save({
         ...createAdminDto,
-        branch: branch.branch,
+        branch,
         password_hash: hashshed_password,
       });
       return {
@@ -156,7 +160,7 @@ export class AdminService {
     await this.findOne(id);
     const { branch } = await this.branchService.findOne(branchId);
 
-    await this.adminRepo.update({ id }, { branch });
+    await this.adminRepo.update({ id }, branch);
     const admin = await this.findOne(id);
     return {
       message: "Updated",

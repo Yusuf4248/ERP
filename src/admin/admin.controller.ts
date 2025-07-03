@@ -88,7 +88,7 @@ export class AdminController {
 
   @UseGuards(AuthGuard, RolesGuard, JwtSelfGuard)
   @Roles("superadmin", "admin")
-  @Patch("change_password/:id")
+  @Patch("change-password/:id")
   @ApiOperation({ summary: "Change admin password" })
   @ApiParam({ name: "id", type: Number })
   @ApiBody({ type: ChangePasswordDto })

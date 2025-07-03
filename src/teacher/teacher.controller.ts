@@ -91,7 +91,7 @@ export class TeacherController {
 
   @UseGuards(AuthGuard, RolesGuard, JwtSelfGuard)
   @Roles("superadmin", "admin", "teacher")
-  @Patch("change_password/:id")
+  @Patch("change-password/:id")
   @ApiOperation({ summary: "Change teacher password" })
   @ApiParam({ name: "id", type: String })
   @ApiBody({ type: ChangePasswordDto })

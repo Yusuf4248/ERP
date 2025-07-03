@@ -13,7 +13,7 @@ export class LidAuthController {
     return this.lidAuthService.register(createLidDto);
   }
 
-  @Post("logIn")
+  @Post("log-in")
   async logIn(
     @Body() logInDto: LoginDto,
     @Res({ passthrough: true }) res: Response
@@ -21,7 +21,7 @@ export class LidAuthController {
     return this.lidAuthService.logIn(logInDto, res);
   }
 
-  @Get("logOut")
+  @Get("log-out")
   logOut(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response
@@ -29,7 +29,7 @@ export class LidAuthController {
     return this.lidAuthService.logOut(request, response);
   }
 
-  @Get("refreshTokens")
+  @Get("refresh-tokens")
   refreshTokens(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response

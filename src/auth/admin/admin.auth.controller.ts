@@ -3,11 +3,11 @@ import { Request, Response } from "express";
 import { LoginDto } from "../dto/login.dto";
 import { AdminAuthService } from "./admin.auth.service";
 
-@Controller("admin_auth")
+@Controller("admin-auth")
 export class AdminAuthController {
   constructor(private readonly adminAuthService: AdminAuthService) {}
 
-  @Post("logIn")
+  @Post("log-in")
   async signIn(
     @Body() logInDto: LoginDto,
     @Res({ passthrough: true }) res: Response
@@ -15,7 +15,7 @@ export class AdminAuthController {
     return this.adminAuthService.logIn(logInDto, res);
   }
 
-  @Get("logOut")
+  @Get("log-out")
   signout(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response
@@ -23,7 +23,7 @@ export class AdminAuthController {
     return this.adminAuthService.logOut(request, response);
   }
 
-  @Get("refreshTokens")
+  @Get("refresh-tokens")
   refreshTokens(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response
