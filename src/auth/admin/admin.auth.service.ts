@@ -68,8 +68,6 @@ export class AdminAuthService {
   }
 
   async logOut(req: Request, res: Response) {
-    console.log("req", req);
-    console.log("res", res);
     const refresh_token = req.cookies.refresh_token;
     if (!refresh_token) {
       throw new UnauthorizedException("Refresh token not found. Please log in");
@@ -78,13 +76,11 @@ export class AdminAuthService {
     const decoded_token = await this.jwtService.verify(refresh_token, {
       secret: process.env.ADMIN_REFRESH_TOKEN_KEY,
     });
-
-    const admin = await this.adminService.findOne(+decoded_token.id);
+    const admin = await this.adminService.findByEmail(decoded_token.email);
     if (!admin) {
       throw new BadRequestException("Something went wrong");
     }
-    await this.adminService.updateTokenHash(admin.admin.id, "");
-
+    await this.adminService.updateTokenHash(admin.id, "");
     res.clearCookie("refresh_token");
 
     return {
