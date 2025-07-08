@@ -43,7 +43,7 @@ export class StudentAuthService {
   async logIn(loginDto: LoginDto, res: Response) {
     const student = await this.studentService.findByEmail(loginDto.email);
     if (!student) {
-      throw new BadRequestException("Email or pasword is incorrect");
+      throw new BadRequestException("Email or password is incorrect");
     }
 
     const validPassword = await bcrypt.compare(

@@ -68,6 +68,8 @@ export class AdminAuthService {
   }
 
   async logOut(req: Request, res: Response) {
+    console.log("req", req);
+    console.log("res", res);
     const refresh_token = req.cookies.refresh_token;
     if (!refresh_token) {
       throw new UnauthorizedException("Refresh token not found. Please log in");

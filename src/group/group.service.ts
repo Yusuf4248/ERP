@@ -1,13 +1,15 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from "@nestjs/common";
 import { CreateGroupDto } from "./dto/create-group.dto";
 import { UpdateGroupDto } from "./dto/update-group.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Group } from "./entities/group.entity";
-import { In, Repository } from "typeorm";
+import { In, QueryFailedError, Repository } from "typeorm";
 import { CoursesService } from "../courses/courses.service";
 import { Teacher } from "../teacher/entities/teacher.entity";
 import { Student } from "../student/entities/student.entities";
@@ -24,7 +26,7 @@ export class GroupService {
   ) {}
   async create(createGroupDto: CreateGroupDto) {
     let teachers: Teacher[] = [];
-    const { course_id, teacherId } = createGroupDto;
+    const { course_id, teacherId, name } = createGroupDto;
     const { course } = await this.courseService.findOne(+course_id);
     if (teacherId) {
       teachers = await this.teacherRepo.find({
@@ -32,16 +34,29 @@ export class GroupService {
       });
     }
 
-    const newGroup = await this.groupRepo.save({
-      ...createGroupDto,
-      course,
-      teachers,
-    });
-    return {
-      message: "New group created successfully!",
-      success: true,
-      newGroup,
-    };
+    try {
+      const newGroup = await this.groupRepo.save({
+        ...createGroupDto,
+        course,
+        teachers,
+      });
+
+      return {
+        message: "New group created successfully!",
+        success: true,
+        newGroup,
+      };
+    } catch (error) {
+      if (
+        error instanceof QueryFailedError &&
+        (error as any).code === "23505"
+      ) {
+        throw new ConflictException("Group name already exists");
+      }
+      throw new InternalServerErrorException(
+        "Unexpected error during group creation"
+      );
+    }
   }
 
   async findAll(page: number, limit: number) {
