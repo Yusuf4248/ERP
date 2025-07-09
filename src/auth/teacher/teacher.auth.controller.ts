@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { TeacherAuthService } from "./teacher.auth.service";
 import { LoginDto } from "../dto/login.dto";
 
-@Controller("teacher_auth")
+@Controller("teacher-auth")
 export class TeacherAuthController {
   constructor(private readonly teacherAuthService: TeacherAuthService) {}
 

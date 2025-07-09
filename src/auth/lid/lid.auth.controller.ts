@@ -4,7 +4,7 @@ import { LoginDto } from "../dto/login.dto";
 import { Request, Response } from "express";
 import { CreateLidDto } from "../../lid/dto/create-lid.dto";
 
-@Controller("lid_auth")
+@Controller("lid-auth")
 export class LidAuthController {
   constructor(private readonly lidAuthService: LidAuthService) {}
 
