@@ -24,7 +24,7 @@ export class CoursesService {
   }
 
   async findAll() {
-    const courses = await this.courseRepo.find({ relations: ["groups"] });
+    const courses = await this.courseRepo.find({ relations: ["groups"], where: {} });
     return {
       success: true,
       message: "Courses:",

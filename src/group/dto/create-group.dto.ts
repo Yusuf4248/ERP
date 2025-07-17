@@ -6,6 +6,7 @@ import {
   IsString,
   IsOptional,
   IsArray,
+  IsBoolean,
 } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { GroupStatus } from "../entities/group.entity";
@@ -40,4 +41,9 @@ export class CreateGroupDto {
   @IsOptional()
   @IsArray()
   teacherId?: number[];
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsBoolean()
+  is_active?: boolean;
 }
