@@ -30,9 +30,7 @@ async function start() {
           "http://localhost:5173",
           "http://185.191.141.200:6969",
           "http://185.191.141.200:3030",
-          "http://erp.uz",
-          "http://api.erp.uz",
-          "http://erp.versel.app",
+          "http://erp-edu.uz",
         ];
         if (!origin || allowedOrigin.includes(origin)) {
           callback(null, true);
