@@ -26,11 +26,17 @@ export class GroupService {
   ) {}
   async create(createGroupDto: CreateGroupDto) {
     let teachers: Teacher[] = [];
-    const { course_id, teacherId } = createGroupDto;
+    let students: Student[] = [];
+    const { course_id, teacherId, studentId } = createGroupDto;
     const { course } = await this.courseService.findOne(+course_id);
     if (teacherId) {
       teachers = await this.teacherRepo.find({
         where: { id: In(teacherId) },
+      });
+    }
+    if (studentId) {
+      students = await this.studentrRepo.find({
+        where: { id: In(studentId) },
       });
     }
 
@@ -39,6 +45,7 @@ export class GroupService {
         ...createGroupDto,
         course,
         teachers,
+        students,
       });
 
       return {

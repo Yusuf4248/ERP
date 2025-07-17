@@ -44,6 +44,11 @@ export class CreateGroupDto {
 
   @Field({ nullable: true })
   @IsOptional()
+  @IsArray()
+  studentId?: number[];
+
+  @Field({ nullable: true })
+  @IsOptional()
   @IsBoolean()
   is_active?: boolean;
 }
