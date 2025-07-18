@@ -9,7 +9,6 @@ import { CoursesModule } from "./courses/courses.module";
 import { GroupModule } from "./group/group.module";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
-import { SchedulesModule } from "./schedules/schedules.module";
 import { AttendanceModule } from "./attendance/attendance.module";
 import { HomeworksModule } from "./homeworks/homeworks.module";
 import { HomeworkSubmissionModule } from "./homework-submission/homework-submission.module";
@@ -25,7 +24,9 @@ import { ExamResultsModule } from "./exam-results/exam-results.module";
 import { MediaModule } from "./media/media.module";
 import { MailModule } from "./mail/mail.module";
 import { FileModule } from "./file/file.module";
-import { LessonsModule } from './lessons/lessons.module';
+import { LessonsModule } from "./lessons/lessons.module";
+import { GroupTeachersModule } from './group-teachers/group-teachers.module';
+import { GroupStudentsModule } from './group-students/group-students.module';
 
 @Module({
   imports: [
@@ -54,7 +55,6 @@ import { LessonsModule } from './lessons/lessons.module';
     AuthModule,
     CoursesModule,
     GroupModule,
-    SchedulesModule,
     AttendanceModule,
     HomeworksModule,
     HomeworkSubmissionModule,
@@ -71,6 +71,8 @@ import { LessonsModule } from './lessons/lessons.module';
     MailModule,
     FileModule,
     LessonsModule,
+    GroupTeachersModule,
+    GroupStudentsModule,
   ],
   controllers: [],
   providers: [],

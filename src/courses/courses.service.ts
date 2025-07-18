@@ -24,7 +24,12 @@ export class CoursesService {
   }
 
   async findAll() {
-    const courses = await this.courseRepo.find({ relations: ["groups"], where: {} });
+    const courses = await this.courseRepo.find({
+      relations: ["groups"],
+      order: {
+        id: "ASC",
+      },
+    });
     return {
       success: true,
       message: "Courses:",
@@ -39,6 +44,9 @@ export class CoursesService {
     const course = await this.courseRepo.findOne({
       where: { id },
       relations: ["groups"],
+      order: {
+        id: "ASC",
+      },
     });
     if (!course) {
       throw new NotFoundException(`${id}-course not found`);

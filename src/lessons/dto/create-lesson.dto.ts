@@ -65,16 +65,4 @@ export class CreateLessonDto {
   @IsInt({ message: "Group ID must be an integer" })
   @Min(1, { message: "Group ID must be at least 1" })
   groupId: number;
-
-  @ApiProperty({
-    example: 2,
-    description: "Schedule ID",
-    required: false,
-    minimum: 1,
-  })
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @IsInt({ message: "Schedule ID must be an integer" })
-  @Min(1, { message: "Schedule ID must be at least 1" })
-  scheduleId: number;
 }

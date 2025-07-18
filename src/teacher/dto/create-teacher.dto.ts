@@ -70,9 +70,6 @@ export class CreateTeacherDto {
     type: Number,
   })
   @IsArray()
-  @ArrayNotEmpty()
-  @Type(() => Number)
-  @IsInt({ each: true })
   @Field(() => [Int])
   branchId: number[];
 }

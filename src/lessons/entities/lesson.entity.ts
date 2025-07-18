@@ -9,7 +9,6 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Group } from "../../group/entities/group.entity";
-import { Schedule } from "../../schedules/entities/schedule.entity";
 import { ApiProperty } from "@nestjs/swagger";
 import { Attendance } from "../../attendance/entities/attendance.entity";
 import { Homework } from "../../homeworks/entities/homework.entity";
@@ -68,15 +67,6 @@ export class Lesson {
   @ManyToOne(() => Group, (group) => group.lessons, { nullable: true })
   @Field(() => Group, { nullable: true })
   group: Group;
-
-  @ApiProperty({
-    type: () => Schedule,
-    nullable: true,
-    description: "Dars jadvali",
-  })
-  @ManyToOne(() => Schedule, (schedule) => schedule.lessons, { nullable: true })
-  @Field(() => Schedule, { nullable: true })
-  schedule: Schedule;
 
   @Field()
   @CreateDateColumn({ type: "timestamp" })

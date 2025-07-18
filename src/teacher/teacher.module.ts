@@ -11,10 +11,19 @@ import { Group } from "../group/entities/group.entity";
 import { Branch } from "../branches/entities/branch.entity";
 import { JwtModule } from "@nestjs/jwt";
 import { FileModule } from "../file/file.module";
+import { GroupTeacher } from "../group-teachers/entities/group-teacher.entity";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Teacher, Homework, Grade, Exam, Group, Branch]),
+    TypeOrmModule.forFeature([
+      Teacher,
+      Homework,
+      Grade,
+      Exam,
+      Group,
+      Branch,
+      GroupTeacher,
+    ]),
     JwtModule,
     FileModule,
   ],

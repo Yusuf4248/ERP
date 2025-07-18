@@ -39,7 +39,7 @@ import { Response } from "express";
 
 @ApiTags("Students")
 @ApiBearerAuth("JWT-auth")
-@Controller("student")
+@Controller("students")
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
@@ -155,49 +155,49 @@ export class StudentController {
     return this.studentService.viewAvatar(+id, res);
   }
 
-  @Get(":studentId/group/:groupId")
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles("student", "admin", "superadmin", "teacher")
-  @ApiOperation({
-    summary: "Talabaning guruhiga tegishli barcha vazifalarni olish",
-  })
-  @ApiParam({
-    name: "studentId",
-    type: Number,
-    example: 5,
-    description: "Student ID",
-  })
-  @ApiParam({
-    name: "groupId",
-    type: Number,
-    example: 3,
-    description: "Group ID",
-  })
-  @ApiResponse({
-    status: 200,
-    description: "Ushbu student uchun guruhdagi uyga vazifalar",
-    type: [Homework],
-  })
-  getAllStudentHomeworksByGroup(
-    @Param("studentId") studentId: number,
-    @Param("groupId") groupId: number,
-    @Query("page") page = 1,
-    @Query("limit") limit = 10,
-    @Query("status") status: HomeworkStatus
-  ) {
-    return this.studentService.getStudentHomeworksByGroup(
-      studentId,
-      groupId,
-      page,
-      limit,
-      status
-    );
-  }
+  // @Get(":studentId/group/:groupId")
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @Roles("student", "admin", "superadmin", "teacher")
+  // @ApiOperation({
+  //   summary: "Talabaning guruhiga tegishli barcha vazifalarni olish",
+  // })
+  // @ApiParam({
+  //   name: "studentId",
+  //   type: Number,
+  //   example: 5,
+  //   description: "Student ID",
+  // })
+  // @ApiParam({
+  //   name: "groupId",
+  //   type: Number,
+  //   example: 3,
+  //   description: "Group ID",
+  // })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: "Ushbu student uchun guruhdagi uyga vazifalar",
+  //   type: [Homework],
+  // })
+  // getAllStudentHomeworksByGroup(
+  //   @Param("studentId") studentId: number,
+  //   @Param("groupId") groupId: number,
+  //   @Query("page") page = 1,
+  //   @Query("limit") limit = 10,
+  //   @Query("status") status: HomeworkStatus
+  // ) {
+  //   return this.studentService.getStudentHomeworksByGroup(
+  //     studentId,
+  //     groupId,
+  //     page,
+  //     limit,
+  //     status
+  //   );
+  // }
 
-  @Get(":id/groups")
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles("student", "admin", "superadmin")
-  getStudentAllGroups(@Param("id", ParseIntPipe) id: number) {
-    return this.studentService.findStudentAllGroups(id);
-  }
+  // @Get(":id/groups")
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @Roles("student", "admin", "superadmin")
+  // getStudentAllGroups(@Param("id", ParseIntPipe) id: number) {
+  //   return this.studentService.findStudentAllGroups(id);
+  // }
 }

@@ -82,46 +82,6 @@ export class GroupController {
     return this.groupService.remove(+id);
   }
 
-  @Patch(":groupId/add-student/:studentId")
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles("admin", "superadmin")
-  async addStudentToGroup(
-    @Param("groupId", ParseIntPipe) groupId: number,
-    @Param("studentId", ParseIntPipe) studentId: number
-  ) {
-    return this.groupService.addStudentToGroup(groupId, studentId);
-  }
-
-  @Patch(":groupId/remove-student/:studentId")
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles("admin", "superadmin")
-  async removeStudentFromGroup(
-    @Param("groupId", ParseIntPipe) groupId: number,
-    @Param("studentId", ParseIntPipe) studentId: number
-  ) {
-    return this.groupService.removeStudentFromGroup(groupId, studentId);
-  }
-
-  @Patch(":groupId/add-teacher/:teacherId")
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles("admin", "superadmin")
-  async addTeacherToGroup(
-    @Param("groupId", ParseIntPipe) groupId: number,
-    @Param("teacherId", ParseIntPipe) teacherId: number
-  ) {
-    return this.groupService.addTeacherToGroup(groupId, teacherId);
-  }
-
-  @Patch(":groupId/remove-teacher/:teacherId")
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles("admin", "superadmin")
-  async removeTeacherFromGroup(
-    @Param("groupId", ParseIntPipe) groupId: number,
-    @Param("teacherId", ParseIntPipe) teacherId: number
-  ) {
-    return this.groupService.removeTeacherFromGroup(groupId, teacherId);
-  }
-
   @Get("/search/:groupName")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles("admin", "superadmin")

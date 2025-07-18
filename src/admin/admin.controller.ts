@@ -132,10 +132,10 @@ export class AdminController {
     description: "Faqat super adminlar ushbu amalni bajara oladi",
   })
   async updateAdminStatus(
-    @Param("id", ParseIntPipe) id: number,
+    @Param("id") id: string,
     @Body() dto: UpdateAdminStatusDto
   ) {
-    return this.adminService.updateStatus(id, dto);
+    return this.adminService.updateStatus(+id, dto);
   }
 
   @Patch(":id/branch/:branchId")

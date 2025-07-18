@@ -5,9 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Attendance } from "./entities/attendance.entity";
 import { AttendanceResolver } from "./attendance.resolver";
 import { Student } from "../student/entities/student.entities";
-import { Schedule } from "../schedules/entities/schedule.entity";
 import { StudentModule } from "../student/student.module";
-import { SchedulesModule } from "../schedules/schedules.module";
 import { JwtModule } from "@nestjs/jwt";
 import { LessonsModule } from "../lessons/lessons.module";
 

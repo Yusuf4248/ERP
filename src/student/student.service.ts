@@ -17,7 +17,6 @@ import { Group } from "../group/entities/group.entity";
 import { Response } from "express";
 import { Homework } from "../homeworks/entities/homework.entity";
 import * as path from "path";
-import * as fs from "fs";
 import * as bcrypt from "bcrypt";
 import { Media } from "../media/entities/media.entity";
 import {
@@ -212,99 +211,99 @@ export class StudentService {
     res.sendFile(avatarPath);
   }
 
-  async findStudentAllGroups(id: number) {
-    const { student } = await this.findOne(id);
-    if (student.groups.length == 0) {
-      throw new NotFoundException("The student has no group.");
-    }
-    const groups = student.groups.map((group) => ({
-      name: group.name,
-      course: group.course.title,
-      start_date: group.start_date,
-      end_date: group.end_date,
-      status: group.status,
-    }));
-    return {
-      groups,
-    };
-  }
+  // async findStudentAllGroups(id: number) {
+  //   const { student } = await this.findOne(id);
+  //   if (student.groups.length == 0) {
+  //     throw new NotFoundException("The student has no group.");
+  //   }
+  //   const groups = student.groups.map((group) => ({
+  //     name: group.name,
+  //     course: group.course.title,
+  //     start_date: group.start_date,
+  //     end_date: group.end_date,
+  //     status: group.status,
+  //   }));
+  //   return {
+  //     groups,
+  //   };
+  // }
 
-  async getStudentHomeworksByGroup(
-    studentId: number,
-    groupId: number,
-    page: number,
-    limit: number,
-    status: HomeworkStatus
-  ) {
-    if (!Number.isInteger(Number(groupId)) || Number(groupId) <= 0)
-      throw new BadRequestException(
-        "ID must be integer and must be greater than zero"
-      );
-    const group = await this.groupRepo.findOne({
-      where: { id: groupId },
-      relations: ["students"],
-    });
-    if (!group) {
-      throw new NotFoundException(`${groupId}-group not found`);
-    }
-    const isStudentExist = group.students.some(
-      (student) => student.id == studentId
-    );
+  // async getStudentHomeworksByGroup(
+  //   studentId: number,
+  //   groupId: number,
+  //   page: number,
+  //   limit: number,
+  //   status: HomeworkStatus
+  // ) {
+  //   if (!Number.isInteger(Number(groupId)) || Number(groupId) <= 0)
+  //     throw new BadRequestException(
+  //       "ID must be integer and must be greater than zero"
+  //     );
+  //   const group = await this.groupRepo.findOne({
+  //     where: { id: groupId },
+  //     relations: ["students"],
+  //   });
+  //   if (!group) {
+  //     throw new NotFoundException(`${groupId}-group not found`);
+  //   }
+  //   const isStudentExist = group.students.some(
+  //     (student) => student.id == studentId
+  //   );
 
-    if (!isStudentExist) {
-      throw new ForbiddenException(
-        `${studentId}-student not found in this group`
-      );
-    }
-    if (page <= 0 || limit <= 0)
-      throw new BadRequestException("Page and limit must be greater than zero");
-    const skip = (page - 1) * limit;
+  //   if (!isStudentExist) {
+  //     throw new ForbiddenException(
+  //       `${studentId}-student not found in this group`
+  //     );
+  //   }
+  //   if (page <= 0 || limit <= 0)
+  //     throw new BadRequestException("Page and limit must be greater than zero");
+  //   const skip = (page - 1) * limit;
 
-    if (!status) {
-      const [homeworks, total] = await this.homeworkRepo.findAndCount({
-        relations: ["teacher", "group"],
-        skip,
-        take: limit,
-        order: { id: "DESC" },
-      });
-      if (homeworks.length == 0) {
-        throw new NotFoundException("Homework not found");
-      }
+  //   if (!status) {
+  //     const [homeworks, total] = await this.homeworkRepo.findAndCount({
+  //       relations: ["teacher", "group"],
+  //       skip,
+  //       take: limit,
+  //       order: { id: "DESC" },
+  //     });
+  //     if (homeworks.length == 0) {
+  //       throw new NotFoundException("Homework not found");
+  //     }
 
-      return {
-        success: true,
-        total,
-        page,
-        limit,
-        homeworks,
-      };
-    } else {
-      const [homeworks, total] = await this.homeworkSubmissionRepo.findAndCount(
-        {
-          where: {
-            student: { id: studentId },
-            homework: { group: { id: groupId } },
-            status: status,
-          },
-          relations: ["homework", "homework.group", "homework.teacher"],
-          skip,
-          take: limit,
-          order: { id: "DESC" },
-        }
-      );
+  //     return {
+  //       success: true,
+  //       total,
+  //       page,
+  //       limit,
+  //       homeworks,
+  //     };
+  //   } else {
+  //     const [homeworks, total] = await this.homeworkSubmissionRepo.findAndCount(
+  //       {
+  //         where: {
+  //           student: { id: studentId },
+  //           homework: { group: { id: groupId } },
+  //           status: status,
+  //         },
+  //         relations: ["homework", "homework.group", "homework.teacher"],
+  //         skip,
+  //         take: limit,
+  //         order: { id: "DESC" },
+  //       }
+  //     );
 
-      if (homeworks.length == 0) {
-        throw new NotFoundException("Homework not found");
-      }
+  //     if (homeworks.length == 0) {
+  //       throw new NotFoundException("Homework not found");
+  //     }
 
-      return {
-        success: true,
-        total,
-        page,
-        limit,
-        status,
-        homeworks,
-      };
-    }
-  }
+  //     return {
+  //       success: true,
+  //       total,
+  //       page,
+  //       limit,
+  //       status,
+  //       homeworks,
+  //     };
+  //   }
+  // }
 }

@@ -8,9 +8,13 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Student } from "../../student/entities/student.entities";
-import { Schedule } from "../../schedules/entities/schedule.entity";
 import { ApiProperty } from "@nestjs/swagger";
 import { Lesson } from "../../lessons/entities/lesson.entity";
+
+export enum AttendanceStatus {
+  CAME = "came",
+  DID_NOT_CAME = "did not came",
+}
 
 @ObjectType()
 @Entity()
@@ -39,12 +43,23 @@ export class Attendance {
   date: Date;
 
   @ApiProperty({
-    example: "bor",
+    enum: AttendanceStatus,
+    example: AttendanceStatus.CAME,
     description: "Talabaning holati (masalan: bor, yo'q, kechikkan)",
   })
   @Field()
+  @Column({
+    type: "enum",
+    enum: AttendanceStatus,
+  })
+  status: AttendanceStatus;
+
+  @ApiProperty({
+    example: "Darsga ma'lum sababga ko'ra kech qoldi.",
+    description: "O'quvchining dars kelgan yoki kelmaganligi haqida tavsif",
+  })
   @Column()
-  status: string;
+  description: string;
 
   @CreateDateColumn({ name: "created_at" })
   @Field()

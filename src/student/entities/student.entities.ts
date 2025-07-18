@@ -9,16 +9,18 @@ import {
   JoinTable,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from "typeorm";
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Attendance } from "../../attendance/entities/attendance.entity";
 import { HomeworkSubmission } from "../../homework-submission/entities/homework-submission.entity";
 import { Grade } from "../../grades/entities/grade.entity";
 import { Payment } from "../../payments/entities/payment.entity";
 import { Event } from "../../events/entities/event.entity";
-import { Group } from "../../group/entities/group.entity";
 import { ExamResult } from "../../exam-results/entities/exam-result.entity";
+import { GroupStudent } from "../../group-students/entities/group-student.entity";
+import { Group } from "../../group/entities/group.entity";
 
 @ObjectType()
 @Entity("student")
@@ -113,10 +115,8 @@ export class Student {
   @OneToMany(() => Attendance, (attendance) => attendance.student)
   attendance: Attendance[];
 
-  @Field({ nullable: true })
-  @ManyToMany(() => Group, (group) => group.students, { nullable: true })
-  @JoinTable()
-  groups: Group[];
+  @OneToMany(() => GroupStudent, (groupStudent) => groupStudent.student)
+  groupStudents: GroupStudent[];
 
   @OneToMany(
     () => HomeworkSubmission,

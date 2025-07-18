@@ -10,16 +10,25 @@ import {
 import { ApiProperty } from "@nestjs/swagger";
 import { Group } from "../../group/entities/group.entity";
 
-@ObjectType()
+export enum LessonInAWeekEnum {
+  THREE = 3,
+  FIVE = 5,
+}
+
+export enum LessonDurationEnum {
+  MINUTES_120 = 120,
+  MINUTES_180 = 180,
+  MINUTES_240 = 240,
+  MINUTES_270 = 270,
+}
+
 @Entity("course")
 export class Course {
   @ApiProperty({ example: 1, description: "Course ID" })
-  @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
 
   @ApiProperty({ example: "Frontend Bootcamp", description: "Course title" })
-  @Field()
   @Column({ type: "varchar", length: 100 })
   title: string;
 
@@ -27,44 +36,40 @@ export class Course {
     example: "Learn HTML, CSS, JavaScript and React",
     description: "Detailed course description",
   })
-  @Field()
-  @Column({ type: "text" })
+  @Column()
   description: string;
 
   @ApiProperty({ example: 150000, description: "Price in UZS" })
-  @Field()
   @Column()
   price: number;
 
   @ApiProperty({
-    example: "3 months",
-    description: "Overall course duration",
+    example: "3",
+    description: "Overall course duration(in month)",
   })
-  @Field()
-  @Column({ type: "varchar", length: 50 })
-  duration: string;
+  @Column()
+  duration: number;
 
   @ApiProperty({
-    example: 3,
-    description: "Number of lessons in a week",
+    enum: LessonInAWeekEnum,
+    example: LessonInAWeekEnum.FIVE,
+    description: "Number of lessons in a week(2,3,4,5)",
   })
-  @Field()
-  @Column({ type: "int" })
-  lessons_in_a_week: number;
+  @Column({ type: "enum", enum: LessonInAWeekEnum })
+  lessons_in_a_week: LessonInAWeekEnum;
 
   @ApiProperty({
-    example: "90 minutes",
-    description: "Duration of a single lesson",
+    enum: LessonDurationEnum,
+    example: LessonDurationEnum.MINUTES_240,
+    description: "Duration of a single lesson(120, 180, 240, 270 minutes)",
   })
-  @Field()
-  @Column({ type: "varchar", length: 50 })
-  lesson_duration: string;
+  @Column({ type: "enum", enum: LessonDurationEnum })
+  lesson_duration: LessonDurationEnum;
 
   @ApiProperty({
     example: true,
     description: "Is the course currently active?",
   })
-  @Field()
   @Column({ type: "boolean", default: true })
   is_active: boolean;
 
@@ -72,7 +77,6 @@ export class Course {
     example: "2025-05-20T14:55:00.000Z",
     description: "Creation date",
   })
-  @Field()
   @CreateDateColumn()
   created_at: Date;
 
@@ -80,14 +84,12 @@ export class Course {
     example: "2025-05-20T14:55:00.000Z",
     description: "Last updated date",
   })
-  @Field()
   @UpdateDateColumn()
   updated_at: Date;
 
   @ApiProperty({
     type: () => [Group],
   })
-  @Field(() => [Group], { nullable: true })
   @OneToMany(() => Group, (group) => group.course)
   groups: Group[];
 }

@@ -9,8 +9,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Attendance } from "./entities/attendance.entity";
 import { Repository } from "typeorm";
 import { StudentService } from "../student/student.service";
-import { SchedulesService } from "../schedules/schedules.service";
 import { LessonsService } from "../lessons/lessons.service";
+import { Student } from "../student/entities/student.entities";
+import { Lesson } from "../lessons/entities/lesson.entity";
 
 @Injectable()
 export class AttendanceService {
@@ -64,11 +65,36 @@ export class AttendanceService {
 
   async update(id: number, updateAttendanceDto: UpdateAttendanceDto) {
     await this.findOne(id);
-    await this.attendanceRepo.update({ id }, updateAttendanceDto);
 
-    const { attandance } = await this.findOne(id);
+    let student: Student | null = null;
+    let lesson: Lesson | null = null;
+
+    if (updateAttendanceDto.studentId) {
+      const newStudent = await this.studentService.findOne(
+        updateAttendanceDto.studentId
+      );
+      student = newStudent.student;
+    }
+
+    if (updateAttendanceDto.lessonId) {
+      const newLesson = await this.lessonService.findOne(
+        updateAttendanceDto.lessonId
+      );
+      lesson = newLesson.lesson;
+    }
+
+    const updateData: any = {
+      ...updateAttendanceDto,
+      ...(student && { student }),
+      ...(lesson && { lesson }),
+    };
+
+    await this.attendanceRepo.update({ id }, updateData);
+
+    const attandance = await this.findOne(id);
+
     return {
-      message: `${id}-attandance data updated!`,
+      message: `${id}-attendance data updated!`,
       success: true,
       attandance,
     };

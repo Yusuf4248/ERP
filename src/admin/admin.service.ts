@@ -137,7 +137,7 @@ export class AdminService {
   }
 
   async updateStatus(id: number, dto: UpdateAdminStatusDto) {
-    const old_data = await this.findOne(id);
+    await this.adminRepo.findOne({ where: { id } });
 
     if (!("is_creator" in dto) && !("is_active" in dto)) {
       throw new BadRequestException(
@@ -147,11 +147,10 @@ export class AdminService {
 
     await this.adminRepo.update({ id }, dto);
 
-    const new_data = await this.findOne(id);
+    const new_data = await this.adminRepo.findOne({ where: { id } });
 
     return {
       message: "Admin holati muvaffaqiyatli yangilandi",
-      old_data,
       new_data,
     };
   }

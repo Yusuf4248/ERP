@@ -10,7 +10,6 @@ import {
 } from "typeorm";
 import { Branch } from "../../branches/entities/branch.entity";
 import { ApiProperty } from "@nestjs/swagger";
-import { Schedule } from "../../schedules/entities/schedule.entity";
 import { Exam } from "../../exams/entities/exam.entity";
 
 @ObjectType()
@@ -47,10 +46,6 @@ export class Room {
   @ManyToOne(() => Branch, (branch) => branch.room)
   @Field(() => Branch)
   branch: Branch;
-
-  @Field(() => [Schedule])
-  @OneToMany(() => Schedule, (schedules) => schedules.room)
-  schedules: Schedule[];
 
   @Field(() => [Exam])
   @OneToMany(() => Exam, (exam) => exam.room)

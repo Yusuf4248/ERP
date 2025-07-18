@@ -1,39 +1,61 @@
 import { InputType, Field, Int } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsInt, Min, MaxLength } from "class-validator";
+import {
+  IsString,
+  IsInt,
+  Min,
+  MaxLength,
+  IsNotEmpty,
+  IsEnum,
+} from "class-validator";
+import {
+  LessonDurationEnum,
+  LessonInAWeekEnum,
+} from "../entities/course.entity";
 
-@InputType()
 export class CreateCourseDto {
   @ApiProperty({ example: "Frontend", maxLength: 100 })
-  @Field()
   @IsString()
   @MaxLength(100)
   title: string;
 
-  @ApiProperty({ example: "Learn HTML and JS." })
-  @Field()
+  @ApiProperty({
+    example: "Learn HTML and JS.",
+    description: "Detailed course description",
+  })
+  @IsNotEmpty()
   @IsString()
   description: string;
 
-  @ApiProperty({ example: 250000 })
-  @Field(() => Int)
+  @ApiProperty({ example: 250000, description: "Price in UZS" })
+  @IsNotEmpty()
   @IsInt()
   @Min(0)
   price: number;
 
-  @ApiProperty({ example: "2 months" })
-  @Field()
-  @IsString()
-  duration: string;
-
-  @ApiProperty({ example: 3 })
-  @Field(() => Int)
+  @ApiProperty({
+    example: "3",
+    description: "Overall course duration(in month)",
+  })
   @IsInt()
-  @Min(1)
-  lessons_in_a_week: number;
+  @IsNotEmpty()
+  duration: number;
 
-  @ApiProperty({ example: "90 minutes" })
-  @Field()
-  @IsString()
-  lesson_duration: string;
+  @ApiProperty({
+    enum: LessonInAWeekEnum,
+    example: LessonInAWeekEnum.FIVE,
+    description: "Number of lessons in a week(2,3,4,5)",
+  })
+  @IsEnum(LessonInAWeekEnum)
+  @IsNotEmpty()
+  lessons_in_a_week: LessonInAWeekEnum;
+
+  @ApiProperty({
+    enum: LessonDurationEnum,
+    example: LessonDurationEnum.MINUTES_240,
+    description: "Duration of a single lesson(120, 180, 240, 270 minutes)",
+  })
+  @IsEnum(LessonDurationEnum)
+  @IsNotEmpty()
+  lesson_duration: LessonDurationEnum;
 }

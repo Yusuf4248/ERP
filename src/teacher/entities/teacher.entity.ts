@@ -15,6 +15,7 @@ import { Grade } from "../../grades/entities/grade.entity";
 import { Exam } from "../../exams/entities/exam.entity";
 import { Group } from "../../group/entities/group.entity";
 import { Branch } from "../../branches/entities/branch.entity";
+import { GroupTeacher } from "../../group-teachers/entities/group-teacher.entity";
 
 @ObjectType()
 @Entity("teacher")
@@ -82,10 +83,9 @@ export class Teacher {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @ManyToMany(() => Group, (group) => group.teachers, { nullable: true })
-  @Field(() => [Group], { nullable: true })
-  @JoinTable()
-  groups: Group[];
+  @OneToMany(() => GroupTeacher, (groupTeacher) => groupTeacher.teacher)
+  @ApiProperty({ type: () => GroupTeacher })
+  groupTeachers: GroupTeacher[];
 
   @OneToMany(() => Homework, (homework) => homework.teacher)
   homework: Homework[];
