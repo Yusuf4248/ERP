@@ -30,7 +30,6 @@ export class GroupService {
         ...createGroupDto,
         course,
       });
-      // shu yergacha ishladi
 
       const lessons = await this.lessonService.createAllLessons({
         roomId: newGroup.roomId,

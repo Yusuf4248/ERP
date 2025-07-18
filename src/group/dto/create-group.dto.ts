@@ -4,8 +4,6 @@ import {
   IsDateString,
   IsInt,
   IsString,
-  IsOptional,
-  IsArray,
   IsMilitaryTime,
 } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
